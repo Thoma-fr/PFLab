@@ -247,7 +247,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: cbc41c0a-2f28-4a64-b138-c9a975d1e2fc
-    m_ActionName: PlayerTopDown/Move[/Keyboard/a,/Keyboard/d]
+    m_ActionName: Player/Move[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5877600269704996877}
@@ -263,10 +263,10 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: b0ccc392-b9bc-48bf-98e6-6fb874a8c9d2
-    m_ActionName: PlayerTopDown/Jump[/Keyboard/space]
+    m_ActionName: Player/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: PlayerTopDown
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!61 &5877600269704996879
