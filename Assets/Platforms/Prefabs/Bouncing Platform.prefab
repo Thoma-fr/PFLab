@@ -425,6 +425,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _minBounceForce: 0
-  _maxBounceForce: 0
-  _bounceForceScale: 0
+  _maxBounceForce: 1000
+  _bounceForceScale: 1.05
   _bounceAnimationDuration: 0

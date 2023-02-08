@@ -42,7 +42,7 @@ public class PlatformBouncing : Platform
         yield break;
     }
 
-    public override void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.TryGetComponent(out URigidbody2D urb))
             return;
