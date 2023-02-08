@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Platform : MonoBehaviour
@@ -72,4 +73,6 @@ public class Platform : MonoBehaviour
     {
         _age = Mathf.Clamp(_age + timeToAdd, 0, _lifeTime);
     }
+
+    public virtual void OnCollisionEnter2D(Collision2D collision) { }
 }

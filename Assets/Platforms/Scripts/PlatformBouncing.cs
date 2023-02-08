@@ -16,9 +16,23 @@ public class PlatformBouncing : Platform
     //===========================================================
 
     /// <summary> Bounces the given RigidBody2D using its velocity and the platform's rotation. </summary>
-    public void Bounce(Rigidbody2D rb)
+    public void Bounce(URigidbody2D urb)
     {
-        // TODO
+        // Reflect the object's velocity for accurate bounce direction.
+        Vector2 reflect = Vector2.Reflect(urb.LastFrameVelocity, transform.up.normalized);
+
+        // We check newVelocity to make sure it is within limits.
+        Vector2 newVelocity = reflect * _bounceForceScale;
+        if(newVelocity.sqrMagnitude > _maxBounceForce * _maxBounceForce)
+        {
+            newVelocity = newVelocity.normalized * _maxBounceForce;
+        }
+        else if(newVelocity.sqrMagnitude < _minBounceForce * _minBounceForce)
+        {
+            newVelocity = newVelocity.normalized * _minBounceForce;
+        }
+
+        urb.velocity = newVelocity;
     }
 
     /// <summary> The platform's bounce animation. </summary>
@@ -26,5 +40,13 @@ public class PlatformBouncing : Platform
     {
         // TODO
         yield break;
+    }
+
+    public override void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.TryGetComponent(out URigidbody2D urb))
+            return;
+
+        Bounce(urb);
     }
 }
