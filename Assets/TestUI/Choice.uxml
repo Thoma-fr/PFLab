@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/TestUI/teststyle.uss?fileID=7433441132597879392&amp;guid=5b28d5e45d94df94da8ed003738c9bb7&amp;type=3#teststyle" />
+    <ui:VisualElement style="background-color: rgba(5, 5, 5, 0.5); height: 481px; width: 594px; align-items: center;">
+        <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center;" />
+        <ui:VisualElement style="flex-direction: row; justify-content: flex-start; align-items: auto;">
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; left: -48px; top: -26px;" />
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; right: -48px; top: -26px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-direction: row; justify-content: flex-start; align-items: auto;">
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; left: -78px; top: -26px;" />
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; right: -78px; top: -26px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-direction: row; justify-content: flex-start; align-items: auto;">
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; left: -48px; top: -26px;" />
+            <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center; right: -48px; top: -26px;" />
+        </ui:VisualElement>
+        <ui:Button text="Button" display-tooltip-when-elided="true" style="width: 100px; transform-origin: center; height: 100px; border-top-left-radius: 255px; border-bottom-left-radius: 255px; border-top-right-radius: 255px; border-bottom-right-radius: 255px; translate: 0 0; white-space: nowrap; -unity-text-align: middle-center;" />
+    </ui:VisualElement>
+</ui:UXML>
