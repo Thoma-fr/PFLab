@@ -4,10 +4,21 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player2DController : MonoBehaviour, IEntity
+public enum PFenum
 {
-    public float life { get; set; }
-    public float damage { get; set; }
+    Basic,
+    Bounce,
+    Boost,
+    Lazer,
+    Mirror,
+    Gravity
+}
+public class Player2DController : MonoBehaviour
+{
+    public static Player2DController instance;
+    private PFenum choosenPF;
+    public float life;
+    public float damage;
     [Header("Stats")]
     [SerializeField] private float maxlife;
     [SerializeField] private float speed, minSpeed, MaxSpeed;
@@ -23,12 +34,34 @@ public class Player2DController : MonoBehaviour, IEntity
     [SerializeField] private AnimationCurve jumpCurve;
     [SerializeField] private float jumpDuration = 0.5f;
     [SerializeField] private float jumpForce = 10f;
+    private CapsuleCollider2D col;
     private Coroutine _jumpCoroutine;
     void Start()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+
         sprite = playerVisual.GetComponent<SpriteRenderer>();
         animator = playerVisual.GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<CapsuleCollider2D>();
+
+    }
+    public void SelectPF(int id)
+    {
+        switch (id)
+        {
+            case 1:choosenPF=PFenum.Basic;break;
+            case 2:choosenPF=PFenum.Bounce;break;
+            case 3:choosenPF=PFenum.Gravity;break;
+            case 4:choosenPF=PFenum.Lazer;break;
+            case 5:choosenPF=PFenum.Mirror;break;
+            case 6:choosenPF=PFenum.Boost;break;
+            default:
+                break;
+        }
     }
     private void FixedUpdate()
     {
@@ -63,8 +96,8 @@ public class Player2DController : MonoBehaviour, IEntity
     }
     public bool GroundCheck()
     {
-        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, -gameObject.transform.up, 0.2f);
-        Debug.DrawRay(gameObject.transform.position, -gameObject.transform.up*0.2f, Color.red); ;
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(col.bounds.max.x*0.5f, col.bounds.min.y), -gameObject.transform.up, 0.2f);
+        Debug.DrawRay(new Vector2(col.bounds.max.x * 0.5f, col.bounds.min.y), -gameObject.transform.up*0.2f, Color.red); ;
         return hit;
     }
     public void jump(InputAction.CallbackContext context)
