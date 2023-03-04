@@ -2,6 +2,7 @@ using UnityEngine;
 using static UnityEngine.UI.Image;
 using UnityEngine.UI;
 using UnityEngine.U2D;
+using System.Collections.Generic;
 
 public class PlatformGravity : Platform
 {
@@ -18,24 +19,34 @@ public class PlatformGravity : Platform
     private Vector2[] _abovePoints, _belowPoints;
     private SpriteShapeRenderer _tubeShapeRenderer;
     private SpriteShapeController _tubeShapeController;
+    private PolygonCollider2D _tubeCollider;
+    private List<URigidbody2D> _bodies;
 
     //=========================================================
 
     private void Awake()
     {
+        _bodies = new List<URigidbody2D>();
         _abovePoints = new Vector2[_raycastPrecision];
         _belowPoints = new Vector2[_raycastPrecision];
         _tubeShapeController = GetComponent<SpriteShapeController>();
         _tubeShapeRenderer = GetComponent<SpriteShapeRenderer>();
+        _tubeCollider = GetComponent<PolygonCollider2D>();
 
         CalculatePoints();
-        FirstDrawSpriteShape();
+        FirstDrawShape();
     }
 
     /// <summary> Moves the given rigidbody in the direction the platform is facing. </summary>
-    public void MoveRigidBody(URigidbody2D urb)
+    public void MoveRigidBodies()
     {
-        // TODO
+        if (_bodies.Count <= 0)
+            return;
+
+        for(int i =  0; i < _bodies.Count; i++)
+        {
+            _bodies[i].Rb.AddForce(9.81f * _bodies[i].Rb.gravityScale * _gravityScale * transform.up, ForceMode2D.Force);
+        }
     }
 
     /// <summary> Calculates the points above and below the platform. </summary>
@@ -60,21 +71,24 @@ public class PlatformGravity : Platform
         }
     }
 
-    private void FirstDrawSpriteShape()
+    private void FirstDrawShape()
     {
         _tubeShapeController.spline.Clear();
+        _tubeCollider.points = new Vector2[_abovePoints.Length + _belowPoints.Length];
         for (int i = 0; i < _abovePoints.Length; i++)
         {
             _tubeShapeController.spline.InsertPointAt(i, transform.InverseTransformPoint(_abovePoints[i]));
+            _tubeCollider.points[i] = transform.InverseTransformPoint(_abovePoints[i]);
         }
 
         for (int i = 0; i < _belowPoints.Length; i++)
         {
             _tubeShapeController.spline.InsertPointAt(i + _abovePoints.Length, transform.InverseTransformPoint(_belowPoints[i]));
+            _tubeCollider.points[i + _abovePoints.Length] = transform.InverseTransformPoint(_belowPoints[i]);
         }
     }
 
-    private void DrawSpriteShape()
+    private void DrawShape()
     {
         for (int i = 0; i < _abovePoints.Length; i++)
         {
@@ -90,7 +104,28 @@ public class PlatformGravity : Platform
     private void LateUpdate()
     {
         CalculatePoints();
-        DrawSpriteShape();
+        DrawShape();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        {
+            _bodies.Add(urp);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        {
+            _bodies.Remove(urp);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        MoveRigidBodies();
     }
 
 #if UNITY_EDITOR

@@ -5,7 +5,7 @@ public class URigidbody2D : MonoBehaviour
 {
     private Rigidbody2D rb;
     public Vector2 LastFrameVelocity { get; private set; }
-    public Vector2 velocity { get { return rb.velocity; } set { rb.velocity = value; } }
+    public Rigidbody2D Rb => rb;
 
     private void Awake()
     {
