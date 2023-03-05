@@ -7,47 +7,54 @@ public class PlatformLaser : Platform
     private float _damagePerSecond;
     [SerializeField, Tooltip("Max distance the laser can travel."), Range(10, 100)]
     private float _laserRange;
+    [SerializeField, Tooltip("Max distance the laser can travel."), Range(1, 10)]
+    private int _maxNbOfLasers;
+
+    [Header("LineRenderer settings")]
     [SerializeField, Range(0, 1)]
     private float _laserWidth;
+    [SerializeField]
+    private Material _laserMaterial;
+    [SerializeField]
+    private int _laserOrderInLayer = -2;
+    [SerializeField]
+    private Color _laserColor;
 
-    protected LineRenderer _lineRenderer;
-    protected RaycastHit2D _hit;
+    private Laser _laser;
 
     //=========================================================
 
-    private void Awake()
+    private void CreateLaser()
     {
-        _lineRenderer = GetComponent<LineRenderer>();
-        _lineRenderer.startWidth = _laserWidth;
-        _lineRenderer.endWidth = _laserWidth;
-    }
-
-    protected void ShootRaycast(Vector2 origin, Vector2 direction)
-    {
-        _hit = Physics2D.Raycast(origin, direction, _laserRange);
-    }
-
-    protected void DrawLaser(Vector2 origin, Vector2 direction)
-    {
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.SetPosition(0, origin);
-        if (_hit)
-            _lineRenderer.SetPosition(1, _hit.point);
-        else
-            _lineRenderer.SetPosition(1, origin + direction * _laserRange);
-    }
-
-    private void LateUpdate()
-    {
-        if(this is not PlatformMirror)
+        if (!_laser)
         {
-            ShootRaycast(transform.position, transform.up);
-            DrawLaser(transform.position, transform.up);
-        }
+            GameObject laserGO = new("Laser");
+            laserGO.transform.position = transform.position;
+            laserGO.transform.rotation = transform.rotation;
+            laserGO.transform.parent = transform;
+            _laser = laserGO.AddComponent<Laser>();
 
-        if (_hit && _hit.collider.CompareTag("Mirror"))
-        {
-
+            _laser.InitiateLaser(
+                maxNbOfLasers: _maxNbOfLasers,
+                damagePerSecond: _damagePerSecond,
+                laserRange: _laserRange,
+                laserWidth: _laserWidth,
+                laserMaterial: _laserMaterial,
+                laserOrderInLayer: _laserOrderInLayer,
+                laserColor:  _laserColor
+                );
         }
+    }
+
+    private void Start()
+    {
+        CreateLaser();
+        _laser.DeactivateLaser();
+        _laser.gameObject.SetActive(true);
+    }
+
+    private void FixedUpdate()
+    {
+        _laser.UpdateLaser(transform.position, transform.up);
     }
 }
