@@ -3,17 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Mirror
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - floor
   - Water
   - UI
-  - Map
-  - Platform
+  - 
+  - 
   - 
   - 
   - 

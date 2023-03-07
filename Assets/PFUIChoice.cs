@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PFUIChoice : MonoBehaviour
+using UnityEngine.EventSystems;
+public class PFUIChoice : MonoBehaviour,IPointerEnterHandler
 {
-    public void SelectPlatForme(PFenum PFType)
+    [SerializeField] private int id;
+
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("fichtre");
+        Player2DController.instance.SelectPF(id);
+        Debug.Log("mouse enter");
     }
 }

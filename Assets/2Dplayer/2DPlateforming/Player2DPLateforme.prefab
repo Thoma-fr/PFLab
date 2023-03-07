@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5877600269704996878}
   - component: {fileID: 5877600269704996877}
+  - component: {fileID: 6380303997984470885}
   - component: {fileID: 4113742723520142927}
   - component: {fileID: 5877600269704996876}
   - component: {fileID: 5877600269704996875}
@@ -149,11 +150,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5877600269704996874}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0c559f5e580a244696a65253c933835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  life: 0
+  damage: 0
   maxlife: 0
   speed: 40
   minSpeed: 0
@@ -187,6 +190,27 @@ MonoBehaviour:
     m_RotationOrder: 4
   jumpDuration: 0.5
   jumpForce: 1
+--- !u!114 &6380303997984470885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5877600269704996874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c70052c579cfc499ad19e7bf36a49d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data: {fileID: 11400000, guid: e315c0be9dde23e429845833cfd68007, type: 2}
+  _groundCheckPoint: {fileID: 0}
+  _groundCheckSize: {x: 0.49, y: 0.03}
+  _frontWallCheckPoint: {fileID: 0}
+  _backWallCheckPoint: {fileID: 0}
+  _wallCheckSize: {x: 0.5, y: 1}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &4113742723520142927
 MonoBehaviour:
   m_ObjectHideFlags: 0
