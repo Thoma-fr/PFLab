@@ -400,7 +400,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 0.5}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &8368881574819758267
 MonoBehaviour:
@@ -425,3 +425,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _damagePerSecond: 0
+  _laserRange: 10
+  _maxNbOfLasers: 6
+  _laserWidth: 0.1
+  _laserMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _laserOrderInLayer: -2
+  _laserColor: {r: 1, g: 0, b: 0, a: 1}
