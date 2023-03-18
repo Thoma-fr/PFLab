@@ -32,7 +32,7 @@ public class PlatformBouncing : Platform
             newVelocity = newVelocity.normalized * _minBounceForce;
         }
 
-        urb.velocity = newVelocity;
+        urb.Rb.velocity = newVelocity;
     }
 
     /// <summary> The platform's bounce animation. </summary>
