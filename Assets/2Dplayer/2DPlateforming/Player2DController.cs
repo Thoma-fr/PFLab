@@ -3,6 +3,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using UnityEngine.U2D;
+
 public enum PFenum
 {
     None = 0,
@@ -82,6 +84,8 @@ public class Player2DController : MonoBehaviour
     public void SelectPF(int id)
     {
         choosenPF = (PFenum)id;
+        Vector4 color = pfPrefabs[(int)choosenPF].GetComponentInChildren<SpriteRenderer>().color;
+        mouseFollow.GetComponent<SpriteRenderer>().color = new Vector4(color.x, color.y, color.z, mouseFollow.GetComponent<SpriteRenderer>().color.a);
         Debug.Log("PFselect");
     }
     public void spawnPF(InputAction.CallbackContext context)
@@ -93,6 +97,7 @@ public class Player2DController : MonoBehaviour
             newPF = Instantiate(pfPrefabs[(int)choosenPF], mouseFollow.transform.position, Quaternion.identity);
             newPF.GetComponent<BoxCollider2D>().enabled = false;
             mouseFollow.SetActive(false);
+            DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, timeScaleValue, 0.2f);
             //Time.timeScale = timeScaleValue*3;
         }
@@ -190,6 +195,7 @@ public class Player2DController : MonoBehaviour
         {
             pfContainer.SetActive(true);
             //Time.timeScale = timeScaleValue;
+            DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, timeScaleValue, 0.2f);
             pfContainer.GetComponent<PFUIContainer>().AnimeUI();
         }
