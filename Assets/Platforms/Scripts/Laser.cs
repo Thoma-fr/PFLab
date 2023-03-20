@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Laser : MonoBehaviour
+public class Laser : MonoBehaviour, IGhostable
 {
     private static int _nbOfLasers;
 
@@ -11,6 +11,9 @@ public class Laser : MonoBehaviour
     private Laser _reflectedLaser; // The reflected laser
 
     //=========================================================
+
+    public void Ghostify() { Debug.Log("Ghostifying " + name); }
+    public void RenderPhysical() { Debug.Log("Un-ghostifying " + name); }
 
     private void CreateLaser(int maxNbOfLasers)
     {

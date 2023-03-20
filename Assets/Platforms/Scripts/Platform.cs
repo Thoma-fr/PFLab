@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Platform : MonoBehaviour
+public class Platform : MonoBehaviour, IGhostable
 {
     [Header("General settings")]
     [SerializeField, Tooltip("Max life time of the platform.")]
@@ -22,6 +22,9 @@ public class Platform : MonoBehaviour
     private bool _isGhost = true; // Is the current platform in ghost mode or not ?
 
     //=========================================================================================================
+
+    public void Ghostify() { Debug.Log("Ghostifying " + name); }
+    public void RenderPhysical() { Debug.Log("Un-ghostifying " + name); }
 
     /// <summary> Checks the surrounding area to see if there is enough space to spawn at least a _minSize sized platform. </summary>
     private bool IsThereEnoughSpace()
