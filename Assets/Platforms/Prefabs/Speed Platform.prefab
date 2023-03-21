@@ -82,6 +82,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _platformGFX: {fileID: 1487333542429606250}
   _speedScale: 0
 --- !u!1 &1843071351920110385
 GameObject:
@@ -177,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1843071352860913076}
   - component: {fileID: 1843071352860913077}
+  - component: {fileID: 1487333542429606250}
   m_Layer: 0
   m_Name: GFX
   m_TagString: Untagged
@@ -253,6 +255,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1487333542429606250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843071352860913079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0171935e4fec1d40a080ba1f03c42a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostColor: {r: 0, g: 0.9607843, b: 1, a: 0.4117647}
+  _spriteRenderers:
+  - {fileID: 1843071352860913077}
+  - {fileID: 1843071351920110391}
 --- !u!1 &6620562935925017792
 GameObject:
   m_ObjectHideFlags: 0
