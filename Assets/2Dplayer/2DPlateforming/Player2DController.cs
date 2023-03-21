@@ -86,8 +86,14 @@ public class Player2DController : MonoBehaviour
     }
     public void spawnPF(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if (choosenPF == PFenum.None) return;
+
+        if (context.started)
+        {
             newPF = Instantiate(pfPrefabs[(int)choosenPF], mouseFollow.transform.position, Quaternion.identity);
+            newPF.GetComponent<BoxCollider2D>().enabled = false;
+            mouseFollow.SetActive(false);
+        }
         if (context.performed)
         {
             if(Mouse.current.leftButton.IsPressed())
@@ -100,6 +106,8 @@ public class Player2DController : MonoBehaviour
         if(context.canceled)
         {
             canRotate = false;
+            newPF.GetComponent<BoxCollider2D>().enabled = true;
+            mouseFollow.SetActive(true);
         }
 
     }
@@ -135,6 +143,7 @@ public class Player2DController : MonoBehaviour
     }
     public void FollowMouse()
     {
+        if (choosenPF == PFenum.None) return;
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
         mouseFollow.transform.position = mousePosition;
