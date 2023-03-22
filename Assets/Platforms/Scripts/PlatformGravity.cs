@@ -107,6 +107,9 @@ public class PlatformGravity : Platform
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (_isGhost)
+            return;
+
         if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
         {
             _bodies.Add(urp);
@@ -115,6 +118,9 @@ public class PlatformGravity : Platform
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (_isGhost)
+            return;
+
         if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
         {
             _bodies.Remove(urp);
@@ -123,6 +129,9 @@ public class PlatformGravity : Platform
 
     private void FixedUpdate()
     {
+        if (_isGhost)
+            return;
+
         MoveRigidBodies();
     }
 

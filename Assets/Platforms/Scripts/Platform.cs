@@ -23,7 +23,7 @@ public class Platform : MonoBehaviour, IGhostable
     private float _age; // Current age of the platform.
     private const float _height = 1f; // Height of the platform, should always be a fixed number.
     private float _width; // Width of the platform, varies in relation to the available space. Capped at _minSize and _maxSize.
-    private bool _isGhost; // Is the current platform in ghost mode or not ?
+    protected bool _isGhost; // Is the current platform in ghost mode or not ?
 
     //=========================================================================================================
 
