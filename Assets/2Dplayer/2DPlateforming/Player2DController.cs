@@ -2,6 +2,8 @@ using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
+using UnityEngine.U2D;
 
 public enum PFenum
 {
@@ -36,7 +38,7 @@ public class Player2DController : MonoBehaviour
     private float directionX;
     private Animator animator;
     private SpriteRenderer sprite;
-
+    public float timeScaleValue;
     [Header("Jump")]
     [SerializeField] private bool isGrounded;
     [SerializeField] private bool isJumping;
@@ -82,6 +84,8 @@ public class Player2DController : MonoBehaviour
     public void SelectPF(int id)
     {
         choosenPF = (PFenum)id;
+        Vector4 color = pfPrefabs[(int)choosenPF].GetComponentInChildren<SpriteRenderer>().color;
+        mouseFollow.GetComponent<SpriteRenderer>().color = new Vector4(color.x, color.y, color.z, mouseFollow.GetComponent<SpriteRenderer>().color.a);
         Debug.Log("PFselect");
     }
     public void spawnPF(InputAction.CallbackContext context)
@@ -93,6 +97,9 @@ public class Player2DController : MonoBehaviour
             newPF = Instantiate(pfPrefabs[(int)choosenPF], mouseFollow.transform.position, Quaternion.identity);
             newPF.GetComponent<BoxCollider2D>().enabled = false;
             mouseFollow.SetActive(false);
+            DOTween.KillAll();
+            DOTween.To(() => Time.timeScale, x => Time.timeScale = x, timeScaleValue, 0.2f);
+            //Time.timeScale = timeScaleValue*3;
         }
         if (context.performed)
         {
@@ -108,6 +115,8 @@ public class Player2DController : MonoBehaviour
             canRotate = false;
             newPF.GetComponent<BoxCollider2D>().enabled = true;
             mouseFollow.SetActive(true);
+            DOTween.KillAll();
+            DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
         }
 
     }
@@ -185,13 +194,17 @@ public class Player2DController : MonoBehaviour
         if (context.performed)
         {
             pfContainer.SetActive(true);
-            Time.timeScale = 0.1f;
+            //Time.timeScale = timeScaleValue;
+            DOTween.KillAll();
+            DOTween.To(() => Time.timeScale, x => Time.timeScale = x, timeScaleValue, 0.2f);
             pfContainer.GetComponent<PFUIContainer>().AnimeUI();
         }
         else
         {
             pfContainer.SetActive(false);
-            Time.timeScale = 1f;
+            DOTween.KillAll();
+            DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.2f);
+            //Time.timeScale = 1f;
         }
     }
     public void TakeDamage(float damage)
