@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class Laser : MonoBehaviour
+public class Laser : MonoBehaviour, IGhostable
 {
 
     private int _laserNb;
     private float _damagePerSecond;
     private float _laserRange;
     private LineRenderer _lineRenderer;
+    private bool _isGhost;
+    private Color _laserColor;
+    private Color _laserGhostColor;
 
     private Laser _reflectedLaser; // The reflected laser
 
@@ -30,12 +33,14 @@ public class Laser : MonoBehaviour
                 laserWidth: _lineRenderer.startWidth,
                 laserMaterial: _lineRenderer.material,
                 laserOrderInLayer: _lineRenderer.sortingOrder,
-                laserColor: _lineRenderer.startColor
+                laserColor: _laserColor,
+                laserGhostColor: _laserGhostColor,
+                isGhost: _isGhost
                 );
         }
     }
 
-    public void InitiateLaser(int maxNbOfLasers, int laserNb, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor)
+    public void InitiateLaser(int maxNbOfLasers, int laserNb, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor, Color laserGhostColor, bool isGhost)
     {
         _damagePerSecond = damagePerSecond;
         _laserRange = laserRange;
@@ -49,6 +54,13 @@ public class Laser : MonoBehaviour
         _lineRenderer.startWidth = laserWidth;
         _lineRenderer.endWidth = laserWidth;
         _lineRenderer.sortingOrder = laserOrderInLayer;
+
+        _laserColor = laserColor;
+        _laserGhostColor = laserGhostColor;
+        if (isGhost)
+            Ghostify();
+        else
+            RenderPhysical();
 
         if(_laserNb < maxNbOfLasers)
         {
@@ -79,7 +91,7 @@ public class Laser : MonoBehaviour
             if (!_reflectedLaser.gameObject.activeSelf)
                 _reflectedLaser.gameObject.SetActive(true);
 
-            _reflectedLaser.UpdateLaser(hit.point, Vector2.Reflect(dir, hit.normal));
+            _reflectedLaser.UpdateLaser(hit.point, Vector2.Reflect(dir, hit.normal), _isGhost);
         }
         else
         {
@@ -99,12 +111,31 @@ public class Laser : MonoBehaviour
             _reflectedLaser.DeactivateLaser();
     }
 
-    public void UpdateLaser(Vector2 origin, Vector2 dir)
+    public void UpdateLaser(Vector2 origin, Vector2 dir, bool isGhost)
     {
+        if (isGhost)
+            Ghostify();
+        else
+            RenderPhysical();
+
         RaycastHit2D hit = Physics2D.Raycast(origin, dir, _laserRange);
         if (hit)
             Collision(origin, dir, hit);
         else
             NoCollision(origin, dir);
+    }
+
+    public void Ghostify()
+    {
+        _isGhost = true;
+        _lineRenderer.startColor = _laserGhostColor;
+        _lineRenderer.endColor = _laserGhostColor;
+    }
+
+    public void RenderPhysical()
+    {
+        _isGhost = false;
+        _lineRenderer.startColor = _laserColor;
+        _lineRenderer.endColor = _laserColor;
     }
 }

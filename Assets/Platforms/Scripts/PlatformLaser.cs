@@ -19,6 +19,8 @@ public class PlatformLaser : Platform
     private int _laserOrderInLayer = -2;
     [SerializeField]
     private Color _laserColor;
+    [SerializeField]
+    private Color _laserGhostColor;
 
     private Laser _laser;
 
@@ -42,7 +44,9 @@ public class PlatformLaser : Platform
                 laserWidth: _laserWidth,
                 laserMaterial: _laserMaterial,
                 laserOrderInLayer: _laserOrderInLayer,
-                laserColor:  _laserColor
+                laserColor: _laserColor,
+                laserGhostColor: _laserGhostColor,
+                isGhost: _isGhost
                 );
         }
     }
@@ -56,6 +60,6 @@ public class PlatformLaser : Platform
 
     private void Update()
     {
-        _laser.UpdateLaser(transform.position, transform.up);
+        _laser.UpdateLaser(transform.position, transform.up, _isGhost);
     }
 }

@@ -7,9 +7,9 @@ public class Platform : MonoBehaviour, IGhostable
     [SerializeField, Tooltip("Max life time of the platform.")]
     private float _lifeTime;
     [SerializeField, Tooltip("Minimum width of the platform.")]
-    private float _minSize;
+    private float _minWidth;
     [SerializeField, Tooltip("Maximum width of the platform.")]
-    private float _maxSize;
+    private float _maxWidth;
     [SerializeField, Tooltip("Duration of the creation and destruction animations of the platform.")]
     private float _animationDuration;
     [SerializeField, Tooltip("Tweening of the creation and destruction animations of the platform.")]
@@ -29,7 +29,6 @@ public class Platform : MonoBehaviour, IGhostable
 
     public void Ghostify()
     {
-        Debug.Log("Ghostifying " + name);
         _isGhost = true;
         DrawGhost();
 
@@ -45,7 +44,6 @@ public class Platform : MonoBehaviour, IGhostable
     }
     public void RenderPhysical()
     {
-        Debug.Log("Un-ghostifying " + name);
         _isGhost = false;
         CreatePlatform();
 

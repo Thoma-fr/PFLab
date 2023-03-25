@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 836840527}
   - component: {fileID: 836840526}
   - component: {fileID: 836840525}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plafond
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -632,7 +632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6263787632810408554, guid: fdc5ac1c13883ec4e93bff45b2768c0a, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6263787632810408554, guid: fdc5ac1c13883ec4e93bff45b2768c0a, type: 3}
       propertyPath: m_TagString
@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 385883923701722359, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
@@ -713,7 +713,7 @@ GameObject:
   - component: {fileID: 1454927960}
   - component: {fileID: 1454927959}
   - component: {fileID: 1454927958}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sol (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,7 +1078,7 @@ GameObject:
   - component: {fileID: 1959822860}
   - component: {fileID: 1959822859}
   - component: {fileID: 1959822858}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1325,7 +1325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1843071351762386788, guid: 071e985715f91664da614fb1cbef2656, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1843071351762386792, guid: 071e985715f91664da614fb1cbef2656, type: 3}
       propertyPath: _maxSpeed
@@ -1438,7 +1438,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6263787632810408554, guid: fdc5ac1c13883ec4e93bff45b2768c0a, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6263787632810408554, guid: fdc5ac1c13883ec4e93bff45b2768c0a, type: 3}
       propertyPath: m_TagString
@@ -1558,6 +1558,10 @@ PrefabInstance:
     - target: {fileID: 8368881574819758266, guid: 26a977ad8caba4b4fae0b0b2d56bfcb5, type: 3}
       propertyPath: m_Name
       value: Laser Platform
+      objectReference: {fileID: 0}
+    - target: {fileID: 8368881574819758266, guid: 26a977ad8caba4b4fae0b0b2d56bfcb5, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26a977ad8caba4b4fae0b0b2d56bfcb5, type: 3}

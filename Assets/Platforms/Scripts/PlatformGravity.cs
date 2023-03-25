@@ -50,7 +50,7 @@ public class PlatformGravity : Platform
     /// <summary> Calculates the points above and below the platform. </summary>
     private void CalculatePoints()
     {
-        LayerMask mask = LayerMask.GetMask("Map", "Platform");
+        LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform");
         RaycastHit2D hit;
         Vector2 origin;
 
