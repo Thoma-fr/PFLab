@@ -20,8 +20,9 @@ public class Player2DController : MonoBehaviour
 {
     public static Player2DController instance;
     public PFenum choosenPF;
+    public GameObject choosenPlatformGameobject;
     public GameObject[] pfPrefabs;
-    public GameObject mouseFollow;
+    //public GameObject mouseFollow;
     public float rotationMultiplyer;
     [SerializeField] private GameObject pfContainer;
     public float life;
@@ -79,14 +80,20 @@ public class Player2DController : MonoBehaviour
         col = GetComponent<CapsuleCollider2D>();
         baseSpeed=speed;
         pfContainer.SetActive(false);
-        
+        choosenPF = PFenum.None;
     }
     public void SelectPF(int id)
     {
         choosenPF = (PFenum)id;
-        Vector4 color = pfPrefabs[(int)choosenPF].GetComponentInChildren<SpriteRenderer>().color;
-        mouseFollow.GetComponent<SpriteRenderer>().color = new Vector4(color.x, color.y, color.z, mouseFollow.GetComponent<SpriteRenderer>().color.a);
-        Debug.Log("PFselect");
+
+        if(choosenPlatformGameobject != null)
+            Destroy(choosenPlatformGameobject);
+
+        choosenPlatformGameobject = Instantiate(pfPrefabs[(int)choosenPF], mousePosition, Quaternion.identity);
+        choosenPlatformGameobject.GetComponent<Platform>().Ghostify();
+        //Vector4 color = pfPrefabs[(int)choosenPF].GetComponentInChildren<SpriteRenderer>().color;
+        //mouseFollow.GetComponent<SpriteRenderer>().color = new Vector4(color.x, color.y, color.z, mouseFollow.GetComponent<SpriteRenderer>().color.a);
+        //Debug.Log("PFselect");
     }
     public void spawnPF(InputAction.CallbackContext context)
     {
@@ -94,27 +101,27 @@ public class Player2DController : MonoBehaviour
 
         if (context.started)
         {
-            newPF = Instantiate(pfPrefabs[(int)choosenPF], mouseFollow.transform.position, Quaternion.identity);
-            newPF.GetComponent<BoxCollider2D>().enabled = false;
-            mouseFollow.SetActive(false);
+            newPF = Instantiate(pfPrefabs[(int)choosenPF], mousePosition, Quaternion.identity);
+            newPF.GetComponent<Platform>().Ghostify();
+            choosenPlatformGameobject.SetActive(false);
             DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, timeScaleValue, 0.2f);
             //Time.timeScale = timeScaleValue*3;
         }
         if (context.performed)
         {
-            if(Mouse.current.leftButton.IsPressed())
-            {
-                canRotate = true;
-                Debug.Log("test");
-            }
-
+            canRotate = true;
+            //if(Mouse.current.leftButton.IsPressed())
+            //{
+            //    canRotate = true;
+            //    Debug.Log("test");
+            //}
         }
         if(context.canceled)
         {
             canRotate = false;
-            newPF.GetComponent<BoxCollider2D>().enabled = true;
-            mouseFollow.SetActive(true);
+            newPF.GetComponent<Platform>().RenderPhysical();
+            choosenPlatformGameobject.SetActive(true);
             DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
         }
@@ -155,8 +162,8 @@ public class Player2DController : MonoBehaviour
         if (choosenPF == PFenum.None) return;
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = Camera.main.transform.position.z + Camera.main.nearClipPlane;
-        mouseFollow.transform.position = mousePosition;
-
+        if(choosenPlatformGameobject)
+            choosenPlatformGameobject.transform.position = mousePosition;
     }
     private void FixedUpdate()
     {

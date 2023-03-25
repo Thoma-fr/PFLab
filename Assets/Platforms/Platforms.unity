@@ -252,7 +252,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 12944786}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.8, y: -3.47, z: 0}
+  m_LocalPosition: {x: 5.91, y: -2.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 836840527}
   - component: {fileID: 836840526}
   - component: {fileID: 836840525}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plafond
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -713,7 +713,7 @@ GameObject:
   - component: {fileID: 1454927960}
   - component: {fileID: 1454927959}
   - component: {fileID: 1454927958}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sol (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,7 +1078,7 @@ GameObject:
   - component: {fileID: 1959822860}
   - component: {fileID: 1959822859}
   - component: {fileID: 1959822858}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
