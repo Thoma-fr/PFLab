@@ -182,6 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6201816106250508578}
   - component: {fileID: 6201816106250508577}
+  - component: {fileID: 7659875217978768554}
   m_Layer: 0
   m_Name: GFX
   m_TagString: Untagged
@@ -258,6 +259,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7659875217978768554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6201816106250508579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0171935e4fec1d40a080ba1f03c42a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostColor: {r: 0, g: 0.9607843, b: 1, a: 0.4117647}
+  _spriteRenderers:
+  - {fileID: 6201816106250508577}
+  - {fileID: 6201816106352927808}
 --- !u!1 &6201816106352927810
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +441,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _platformGFX: {fileID: 7659875217978768554}
   _minBounceForce: 20
   _maxBounceForce: 1000
   _bounceForceScale: 1.05

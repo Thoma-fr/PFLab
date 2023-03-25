@@ -36,6 +36,7 @@ public class PlatformLaser : Platform
 
             _laser.InitiateLaser(
                 maxNbOfLasers: _maxNbOfLasers,
+                laserNb: 1,
                 damagePerSecond: _damagePerSecond,
                 laserRange: _laserRange,
                 laserWidth: _laserWidth,
@@ -53,7 +54,7 @@ public class PlatformLaser : Platform
         _laser.gameObject.SetActive(true);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         _laser.UpdateLaser(transform.position, transform.up);
     }

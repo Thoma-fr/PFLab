@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    private static int _nbOfLasers;
 
+    private int _laserNb;
     private float _damagePerSecond;
     private float _laserRange;
     private LineRenderer _lineRenderer;
@@ -24,6 +24,7 @@ public class Laser : MonoBehaviour
 
             _reflectedLaser.InitiateLaser(
                 maxNbOfLasers: maxNbOfLasers,
+                laserNb: _laserNb + 1,
                 damagePerSecond: _damagePerSecond,
                 laserRange: _laserRange,
                 laserWidth: _lineRenderer.startWidth,
@@ -34,10 +35,11 @@ public class Laser : MonoBehaviour
         }
     }
 
-    public void InitiateLaser(int maxNbOfLasers, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor)
+    public void InitiateLaser(int maxNbOfLasers, int laserNb, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor)
     {
         _damagePerSecond = damagePerSecond;
         _laserRange = laserRange;
+        _laserNb = laserNb;
 
         _lineRenderer = gameObject.AddComponent<LineRenderer>();
         _lineRenderer.positionCount = 2;
@@ -48,9 +50,7 @@ public class Laser : MonoBehaviour
         _lineRenderer.endWidth = laserWidth;
         _lineRenderer.sortingOrder = laserOrderInLayer;
 
-        _nbOfLasers++;
-
-        if(_nbOfLasers < maxNbOfLasers)
+        if(_laserNb < maxNbOfLasers)
         {
             CreateLaser(maxNbOfLasers);
         }

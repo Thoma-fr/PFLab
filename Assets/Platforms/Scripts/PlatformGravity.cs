@@ -1,8 +1,6 @@
-using UnityEngine;
-using static UnityEngine.UI.Image;
-using UnityEngine.UI;
-using UnityEngine.U2D;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.U2D;
 
 public class PlatformGravity : Platform
 {
@@ -109,6 +107,9 @@ public class PlatformGravity : Platform
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (_isGhost)
+            return;
+
         if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
         {
             _bodies.Add(urp);
@@ -117,6 +118,9 @@ public class PlatformGravity : Platform
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (_isGhost)
+            return;
+
         if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
         {
             _bodies.Remove(urp);
@@ -125,6 +129,9 @@ public class PlatformGravity : Platform
 
     private void FixedUpdate()
     {
+        if (_isGhost)
+            return;
+
         MoveRigidBodies();
     }
 
