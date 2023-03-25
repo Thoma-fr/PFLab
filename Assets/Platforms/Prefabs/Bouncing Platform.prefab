@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: 6201816106827387262}
   - component: {fileID: 6201816106827387261}
   - component: {fileID: 6201816106827387260}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bouncing Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

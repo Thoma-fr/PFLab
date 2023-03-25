@@ -51,7 +51,7 @@ public class MovementController : MonoBehaviour
 
     private bool GroundCheck()
     {
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, .5f, Vector2.down, _groundCheckDistance);
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, .5f, Vector2.down, _groundCheckDistance, ~LayerMask.GetMask("Bouncing Platform"));
 
         if (hit)
             CoolDebugs.CoolDebugs.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.green, Time.fixedDeltaTime);

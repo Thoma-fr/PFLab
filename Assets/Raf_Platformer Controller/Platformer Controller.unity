@@ -238,7 +238,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -272,8 +272,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547bc24e82dcd574b957512b73144caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sqrVelocity: 0
-  groundCheck: 0
   _groundCheckDistance: 0.52
   _maxSpeed: 10
   _accelerationStrength: 2
@@ -286,6 +284,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6201816106827387260, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
+      propertyPath: _bounceForceScale
+      value: 1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 6201816106827387262, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -454,6 +456,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6201816106827387260, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
+      propertyPath: _bounceForceScale
+      value: 1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 6201816106827387262, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -511,6 +517,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6201816106827387260, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
+      propertyPath: _bounceForceScale
+      value: 1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 6201816106827387262, guid: b492e442ea33c2d42980b906488ccde2, type: 3}
       propertyPath: m_RootOrder
       value: 2
