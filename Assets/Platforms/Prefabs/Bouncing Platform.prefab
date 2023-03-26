@@ -432,8 +432,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifeTime: 0
-  _minSize: 0
-  _maxSize: 0
+  _minWidth: 0
+  _maxWidth: 0
   _animationDuration: 0
   _animationCurve:
     serializedVersion: 2
