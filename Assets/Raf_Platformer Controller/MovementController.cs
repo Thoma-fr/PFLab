@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
+    private Rigidbody2D _rb2D;
+
     [Header("Movement")]
     [SerializeField]
     private float _maxSpeed;
@@ -15,6 +17,7 @@ public class MovementController : MonoBehaviour
     private float _airAccelerationFactor;
     [SerializeField, Tooltip("Force de freinage.")]
     private float _deccelerationStrength;
+    public float MovementDirection { get; set; }
 
     [Header("Jump")]
     [SerializeField, Range(0, 2f)]
@@ -35,8 +38,8 @@ public class MovementController : MonoBehaviour
     private float _defaultGravityScale;
     private float _currentJumpDuration;
     private Coroutine _jumpCoroutine;
+    public bool HoldingJump { get; set; }
 
-    private Rigidbody2D _rb2D;
 
     //==========================================================================
 
@@ -48,18 +51,8 @@ public class MovementController : MonoBehaviour
 
     private void Update() // A modifier pour le passage vers le new input system
     {
-        if(Input.anyKey) 
-        {
-            if (Input.GetKey(KeyCode.D))
-            {
-                Acceleration(Vector2.right);
-            }
-
-            if (Input.GetKey(KeyCode.Q))
-            {
-                Acceleration(Vector2.left);
-            }
-        }
+        if(MovementDirection != 0)
+            Acceleration(MovementDirection);
         else
         {
             // Si le joueur se deplace et qu'il touche le sol, on le ralenti
@@ -71,9 +64,8 @@ public class MovementController : MonoBehaviour
         if(GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")))
             ClampSpeed(_maxSpeed);
 
-        if(Input.GetKey(KeyCode.Space))
+        if (HoldingJump)
         {
-            // Saute si le joueur est au sol, augmente la durée du saut s'il est deja en train de sauter.
             if (GroundCheck(~LayerMask.GetMask("Bouncing Platform")) && _jumpCoroutine == null)
                 _jumpCoroutine = StartCoroutine(JumpCoroutine());
             else if (_jumpCoroutine != null)
@@ -117,15 +109,15 @@ public class MovementController : MonoBehaviour
     }
 
     /// <summary> Accelere le joueur au cours du temps dans la direction donnee. </summary>
-    private void Acceleration(Vector2 direction)
+    private void Acceleration(float direction)
     {
         if (GroundCheck(LayerMask.GetMask("Speed Platform")))
             return;
         
         if (GroundCheck(~LayerMask.GetMask("Bouncing Platform")))
-            _rb2D.velocity += _accelerationStrength * Time.deltaTime * direction;
+            _rb2D.velocity += _accelerationStrength * Time.deltaTime * new Vector2(direction, 0).normalized;
         else
-            _rb2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * direction;
+            _rb2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * new Vector2(direction, 0).normalized;
     }
 
     private IEnumerator JumpCoroutine()
