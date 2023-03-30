@@ -79,9 +79,9 @@ public class MovementController : MonoBehaviour
 
 #if UNITY_EDITOR
         if (hit)
-            CoolDebugs.CoolDebugs.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.green, Time.fixedDeltaTime);
+            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.green, Time.fixedDeltaTime);
         else
-            CoolDebugs.CoolDebugs.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.red, Time.fixedDeltaTime);
+            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.red, Time.fixedDeltaTime);
 #endif
 
         return hit;

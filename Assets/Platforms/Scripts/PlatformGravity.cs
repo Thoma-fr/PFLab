@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
+using CoolDebugs;
 
 public class PlatformGravity : Platform
 {
@@ -43,14 +45,14 @@ public class PlatformGravity : Platform
 
         for(int i =  0; i < _bodies.Count; i++)
         {
-            _bodies[i].Rb.AddForce(9.81f * _bodies[i].Rb.gravityScale * _gravityScale * transform.up, ForceMode2D.Force);
+            _bodies[i].RigidBody2D.AddForce(9.81f * _bodies[i].RigidBody2D.gravityScale * _gravityScale * transform.up, ForceMode2D.Force);
         }
     }
 
     /// <summary> Calculates the points above and below the platform. </summary>
     private void CalculatePoints()
     {
-        LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform");
+        LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
         RaycastHit2D hit;
         Vector2 origin;
 
@@ -110,10 +112,24 @@ public class PlatformGravity : Platform
         if (_isGhost)
             return;
 
-        if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
-            _bodies.Add(urp);
+            StartCoroutine(LerpIn(urb));
         }
+    }
+
+    private IEnumerator LerpIn(URigidbody2D urb)
+    {
+        Vector2 start = urb.transform.position;
+        Vector2 thisToObject = start - (Vector2)transform.position;
+        float sign = Mathf.Sign(Vector2.Dot(thisToObject, (Vector2)transform.right));
+        Vector2 end = start + 0.5f * -sign * (Vector2)transform.right.normalized;
+
+        CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
+        CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
+
+        _bodies.Add(urb);
+        yield break;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -121,9 +137,9 @@ public class PlatformGravity : Platform
         if (_isGhost)
             return;
 
-        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
-            _bodies.Remove(urp);
+            _bodies.Remove(urb);
         }
     }
 
@@ -136,11 +152,8 @@ public class PlatformGravity : Platform
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
-        if (!UnityEditor.EditorApplication.isPlaying)
-            return;
-
         Vector2 origin;
 
         Gizmos.color = Color.red;

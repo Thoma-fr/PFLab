@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CoolDebugs
 { 
-    public static class CoolDebugs
+    public static class CoolDraws
     {
         public static void DrawWireSphere(Vector3 center, float radius, Color color, float duration, int quality = 3)
         {

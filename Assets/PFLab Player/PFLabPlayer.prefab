@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 7809915030991529937}
   - component: {fileID: 7809915030991529932}
   - component: {fileID: 7809915030991529935}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PFLabPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
