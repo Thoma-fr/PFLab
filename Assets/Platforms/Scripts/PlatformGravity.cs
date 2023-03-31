@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 using CoolDebugs;
+using TreeEditor;
 
 public class PlatformGravity : Platform
 {
     [Header("Gravity settings")]
+    [SerializeField, Tooltip("SpriteShapeController of the gravity tube.")]
+    private SpriteShapeController _tubeShapeController;
     [SerializeField, Tooltip("How fast is the rigidBody traveling through the tube.")]
     private float _gravitySpeed;
     [SerializeField, Tooltip("Left and right Raycast points")]
@@ -14,9 +17,7 @@ public class PlatformGravity : Platform
     [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(10, 500)]
     private float _tubeLengthLimit;
 
-    private Vector2 _abovePoint, _belowPoint;
-    private SpriteShapeRenderer _tubeShapeRenderer;
-    private SpriteShapeController _tubeShapeController;
+    private float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
     private List<URigidbody2D> _bodies;
 
@@ -25,8 +26,6 @@ public class PlatformGravity : Platform
     private void Awake()
     {
         _bodies = new List<URigidbody2D>();
-        _tubeShapeController = GetComponent<SpriteShapeController>();
-        _tubeShapeRenderer = GetComponent<SpriteShapeRenderer>();
         _tubeCollider = GetComponent<BoxCollider2D>();
 
         _tubeShapeController.spline.Clear();
@@ -50,22 +49,63 @@ public class PlatformGravity : Platform
     {
         LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
         Vector2 origin = transform.position;
+        Vector2 up = transform.up.normalized;
+        Vector2 size = _tubeCollider.size * new Vector2(.8f, 1); // Remplacer quand on a aura la logique d'expension des platformes
+        float angle = transform.rotation.eulerAngles.z;
 
-        //RaycastHit2D hit = Physics2D.BoxCast(origin, , transform.rotation.eulerAngles.z, transform.up.normalized, mask);
+        // Above
+        RaycastHit2D hit = Physics2D.BoxCast(origin, size, angle, up, _tubeLengthLimit, mask);
+        Vector2 abovePoint, belowPoint;
+        if (hit)
+            abovePoint = hit.point;
+        else
+            abovePoint = origin + _tubeLengthLimit * up;
 
+        // Below
+        hit = Physics2D.BoxCast(origin, size, angle, -up, _tubeLengthLimit, mask);
+        if (hit)
+            belowPoint = hit.point;
+        else
+            belowPoint = origin - _tubeLengthLimit * up;
+
+        // Calculer la distance point <> platforme
+        _aboveDistance = Vector2.Dot(abovePoint - origin, up);
+        _belowDistance = Vector2.Dot(belowPoint - origin, up);
     }
 
     private void DrawShape()
     {
-        //for (int i = 0; i < _abovePoints.Length; i++)
-        //{
-        //    _tubeShapeController.spline.SetPosition(i, transform.InverseTransformPoint(_abovePoints[i]));
-        //}
-        //
-        //for (int i = 0; i < _belowPoints.Length; i++)
-        //{
-        //    _tubeShapeController.spline.SetPosition(i + _abovePoints.Length, transform.InverseTransformPoint(_belowPoints[i]));
-        //}
+        float width = _tubeCollider.size.x;
+        Vector2 pointPosition = Vector2.zero;
+
+        for(int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    pointPosition = new Vector2(_aboveDistance, -width * .5f);
+                    break;
+
+                case 1:
+                    pointPosition = new Vector2(_aboveDistance, width * .5f);
+                    break;
+
+                case 2:
+                    pointPosition = new Vector2(_belowDistance, width * .5f);
+                    break;
+
+                case 3:
+                    pointPosition = new Vector2(_belowDistance, -width * .5f);
+                    break;
+
+                default: break;
+            }
+
+            _tubeShapeController.spline.SetPosition(i, pointPosition);
+        }
+
+        _tubeCollider.size = new Vector2(width, _aboveDistance - _belowDistance);
+        _tubeCollider.offset = new Vector2();
     }
 
     private void LateUpdate()

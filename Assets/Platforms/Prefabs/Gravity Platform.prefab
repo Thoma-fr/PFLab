@@ -536,10 +536,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _platformGFX: {fileID: 2342024597948218405}
+  _tubeShapeController: {fileID: 2339615719695072953}
   _gravitySpeed: 0
   _leftPoint: {fileID: 7585516396573366632}
   _rightPoint: {fileID: 6836521078539158110}
-  _tubeLengthLimit: 0
+  _tubeLengthLimit: 10
 --- !u!61 &8033766395606760131
 BoxCollider2D:
   m_ObjectHideFlags: 0
