@@ -48,7 +48,7 @@ public class PlatformGravity : Platform
         LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
         Vector2 origin = transform.position;
         Vector2 up = transform.up.normalized;
-        Vector2 size = new Vector2(5, 0.5f) * new Vector2(.8f, 1); // Remplacer quand on a aura la logique d'expension des platformes
+        Vector2 size = new Vector2(5, 0.5f) * new Vector2(.8f, 1); // TODO : Remplacer quand on a aura la logique d'expension des platformes
         float angle = transform.rotation.eulerAngles.z;
 
         // Above
@@ -66,16 +66,18 @@ public class PlatformGravity : Platform
         else
             belowPoint = origin - _tubeLengthLimit * up;
 
-        // Calculer la distance point <> platforme
+        // Calculer la distance point <-> platforme
         _aboveDistance = Vector2.Dot(abovePoint - origin, up);
         _belowDistance = Vector2.Dot(belowPoint - origin, up);
 
-        //Debug.DrawRay(transform.position, _aboveDistance * up, Color.red);
-        //Debug.DrawRay(transform.position + 2.5f * transform.right.normalized, _aboveDistance * up, Color.red);
-        //Debug.DrawRay(transform.position - 2.5f * transform.right.normalized, _aboveDistance * up, Color.red);
-        //Debug.DrawRay(transform.position, _belowDistance * up, Color.blue);
-        //Debug.DrawRay(transform.position + 2.5f * transform.right.normalized, _belowDistance * up, Color.blue);
-        //Debug.DrawRay(transform.position - 2.5f * transform.right.normalized, _belowDistance * up, Color.blue);
+        // Changer la taille et l'offset du collider pour le recentrer
+        _tubeCollider.size = new Vector2(5, _aboveDistance - _belowDistance); // TODO : Remplacer quand on a aura la logique d'expension des platformes
+
+        // Recentrer l'offset du collider
+        abovePoint = (Vector2)transform.position + _aboveDistance * up; 
+        belowPoint = (Vector2)transform.position + _belowDistance * up;
+        Vector2 middle = Vector2.Lerp(belowPoint, abovePoint, .5f);
+        _tubeCollider.offset = new Vector2(0, transform.InverseTransformPoint(middle).y);
     }
 
     private void DrawShape()
@@ -117,9 +119,6 @@ public class PlatformGravity : Platform
 
             _tubeShapeController.spline.SetPosition(i, pointPosition);
         }
-
-        _tubeCollider.size = new Vector2(width, _aboveDistance - _belowDistance);
-        _tubeCollider.offset = transform.position - _tubeCollider.bounds.center;
     }
 
     private void LateUpdate()
