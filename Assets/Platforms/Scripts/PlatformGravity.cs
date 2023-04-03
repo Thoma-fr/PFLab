@@ -12,12 +12,10 @@ public class PlatformGravity : Platform
     private SpriteShapeController _tubeShapeController;
     [SerializeField, Tooltip("How fast is the rigidBody traveling through the tube.")]
     private float _gravitySpeed;
-    [SerializeField, Tooltip("Left and right Raycast points")]
-    private Transform _leftPoint, _rightPoint;
     [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(10, 500)]
     private float _tubeLengthLimit;
 
-    private float _aboveDistance, _belowDistance;
+    public float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
     private List<URigidbody2D> _bodies;
 
@@ -50,7 +48,7 @@ public class PlatformGravity : Platform
         LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
         Vector2 origin = transform.position;
         Vector2 up = transform.up.normalized;
-        Vector2 size = _tubeCollider.size * new Vector2(.8f, 1); // Remplacer quand on a aura la logique d'expension des platformes
+        Vector2 size = new Vector2(5, 0.5f) * new Vector2(.8f, 1); // Remplacer quand on a aura la logique d'expension des platformes
         float angle = transform.rotation.eulerAngles.z;
 
         // Above
@@ -71,6 +69,13 @@ public class PlatformGravity : Platform
         // Calculer la distance point <> platforme
         _aboveDistance = Vector2.Dot(abovePoint - origin, up);
         _belowDistance = Vector2.Dot(belowPoint - origin, up);
+
+        //Debug.DrawRay(transform.position, _aboveDistance * up, Color.red);
+        //Debug.DrawRay(transform.position + 2.5f * transform.right.normalized, _aboveDistance * up, Color.red);
+        //Debug.DrawRay(transform.position - 2.5f * transform.right.normalized, _aboveDistance * up, Color.red);
+        //Debug.DrawRay(transform.position, _belowDistance * up, Color.blue);
+        //Debug.DrawRay(transform.position + 2.5f * transform.right.normalized, _belowDistance * up, Color.blue);
+        //Debug.DrawRay(transform.position - 2.5f * transform.right.normalized, _belowDistance * up, Color.blue);
     }
 
     private void DrawShape()
@@ -81,9 +86,9 @@ public class PlatformGravity : Platform
         if(_tubeShapeController.spline.GetPointCount() == 0)
         {
             _tubeShapeController.spline.InsertPointAt(0, new Vector2(0, 0));
-            _tubeShapeController.spline.InsertPointAt(1, new Vector2(1, 0));
+            _tubeShapeController.spline.InsertPointAt(1, new Vector2(0, 1));
             _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
-            _tubeShapeController.spline.InsertPointAt(3, new Vector2(0, 1));
+            _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
         }
 
 
@@ -92,19 +97,19 @@ public class PlatformGravity : Platform
             switch (i)
             {
                 case 0:
-                    pointPosition = new Vector2(_aboveDistance, -width * .5f);
+                    pointPosition = new Vector2(-width * .5f, _belowDistance);
                     break;
 
                 case 1:
-                    pointPosition = new Vector2(_aboveDistance, width * .5f);
+                    pointPosition = new Vector2(-width * .5f, _aboveDistance);
                     break;
 
                 case 2:
-                    pointPosition = new Vector2(_belowDistance, width * .5f);
+                    pointPosition = new Vector2(width * .5f, _aboveDistance);
                     break;
 
                 case 3:
-                    pointPosition = new Vector2(_belowDistance, -width * .5f);
+                    pointPosition = new Vector2(width * .5f, _belowDistance);
                     break;
 
                 default: break;
