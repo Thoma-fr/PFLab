@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class BallDetector : MonoBehaviour
 {
-    [SerializeField] private Sprite pressedSprite;
+
     private SpriteRenderer spriteRenderer;
-    private bool isPressed = false;
+
+    public bool isPressed = false;
+
+    public GameObject thingToActive;
 
     private void Start()
     {
@@ -15,10 +19,9 @@ public class BallDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isPressed && other.CompareTag("Player"))
+        if (other.CompareTag("Balls"))
         {
             isPressed = true;
-            spriteRenderer.sprite = pressedSprite;
         }
     }
 }
