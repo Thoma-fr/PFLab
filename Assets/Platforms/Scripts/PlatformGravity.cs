@@ -78,6 +78,15 @@ public class PlatformGravity : Platform
         float width = _tubeCollider.size.x;
         Vector2 pointPosition = Vector2.zero;
 
+        if(_tubeShapeController.spline.GetPointCount() == 0)
+        {
+            _tubeShapeController.spline.InsertPointAt(0, new Vector2(0, 0));
+            _tubeShapeController.spline.InsertPointAt(1, new Vector2(1, 0));
+            _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
+            _tubeShapeController.spline.InsertPointAt(3, new Vector2(0, 1));
+        }
+
+
         for(int i = 0; i < 4; i++)
         {
             switch (i)
@@ -105,7 +114,7 @@ public class PlatformGravity : Platform
         }
 
         _tubeCollider.size = new Vector2(width, _aboveDistance - _belowDistance);
-        _tubeCollider.offset = new Vector2();
+        _tubeCollider.offset = transform.position - _tubeCollider.bounds.center;
     }
 
     private void LateUpdate()
