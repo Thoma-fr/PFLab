@@ -14,8 +14,10 @@ public class PlatformGravity : Platform
     private float _gravitySpeed;
     [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(10, 500)]
     private float _tubeLengthLimit;
+    [SerializeField, Tooltip("The time it take for the object to reach the center of the tube."), Range(0.01f, 1f)]
+    private float _slurpDuration;
 
-    public float _aboveDistance, _belowDistance;
+    private float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
     private List<URigidbody2D> _bodies;
 
@@ -27,6 +29,15 @@ public class PlatformGravity : Platform
         _tubeCollider = GetComponent<BoxCollider2D>();
 
         _tubeShapeController.spline.Clear();
+
+        if (_tubeShapeController.spline.GetPointCount() == 0)
+        {
+            _tubeShapeController.spline.InsertPointAt(0, new Vector2(0, 0));
+            _tubeShapeController.spline.InsertPointAt(1, new Vector2(0, 1));
+            _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
+            _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
+        }
+
         CalculatePoints();
     }
 
@@ -85,15 +96,6 @@ public class PlatformGravity : Platform
         float width = _tubeCollider.size.x;
         Vector2 pointPosition = Vector2.zero;
 
-        if(_tubeShapeController.spline.GetPointCount() == 0)
-        {
-            _tubeShapeController.spline.InsertPointAt(0, new Vector2(0, 0));
-            _tubeShapeController.spline.InsertPointAt(1, new Vector2(0, 1));
-            _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
-            _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
-        }
-
-
         for(int i = 0; i < 4; i++)
         {
             switch (i)
@@ -134,22 +136,42 @@ public class PlatformGravity : Platform
 
         if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
+            urb.DisableControls(); // Au cas ou le urb est le joueur.
             StartCoroutine(LerpIn(urb));
         }
     }
 
+    /// <summary> Sluuurrrrpppp </summary>
     private IEnumerator LerpIn(URigidbody2D urb)
     {
         Vector2 start = urb.transform.position;
         Vector2 thisToObject = start - (Vector2)transform.position;
-        float sign = Mathf.Sign(Vector2.Dot(thisToObject, (Vector2)transform.right));
-        Vector2 end = start + 0.5f * -sign * (Vector2)transform.right.normalized;
+        Vector2 end = transform.position + Vector2.Dot(thisToObject, transform.up.normalized) * transform.up.normalized;
 
         CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
         CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
 
+        urb.RigidBody2D.gravityScale = 0;
+        urb.RigidBody2D.velocity = Vector2.zero;
+
+        float t = 0;
+        while (t < 1)
+        {
+            urb.transform.position = Vector2.LerpUnclamped(start, end, t);
+            t += Time.fixedDeltaTime / _slurpDuration;
+            yield return new WaitForFixedUpdate();
+        }
+
+        urb.ResetGravityScale();
+        urb.EnableControls();
         _bodies.Add(urb);
+
         yield break;
+    }
+
+    private void OnDestroy()
+    {
+        _bodies.Clear();
     }
 
     private void OnTriggerExit2D(Collider2D collision)

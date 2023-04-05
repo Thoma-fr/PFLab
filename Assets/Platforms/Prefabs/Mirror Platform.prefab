@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6263787631716162909}
   - component: {fileID: 4858613912798712171}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 6263787632810408532}
   - component: {fileID: 6263787632810408533}
   - component: {fileID: 1015116344586663781}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mirror Platform
   m_TagString: Mirror
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 7164229377618350406}
   - component: {fileID: 7889256386971470437}
   - component: {fileID: 550405750381578382}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -314,7 +314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7601023768102482256}
   - component: {fileID: 3832682742075425203}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

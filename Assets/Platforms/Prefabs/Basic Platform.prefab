@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 385883923701722358}
   - component: {fileID: 385883923701722357}
   - component: {fileID: 385883923701722356}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Basic Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 385883924328604842}
   - component: {fileID: 3441274276765536399}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7871267377469549015}
   - component: {fileID: 977622620589849476}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 3222801819178107904}
   - component: {fileID: 7959591460412623526}
   - component: {fileID: 1328981039152157564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour
 {
     private bool _controlsEnabled;
+    public bool EnabledControls => _controlsEnabled;
     private MovementController _movementController;
     private PlatformsController _platformsController;
 
@@ -11,21 +12,38 @@ public class InputController : MonoBehaviour
     {
         _movementController = GetComponent<MovementController>();
         _platformsController = GetComponent<PlatformsController>();
+        _controlsEnabled = true;
     }
 
-    /// <summary> Toggles the controls. Returns the state of the controls at after the toggle.</summary>
-    public bool ToggleControls()
+    public void DisableControls()
     {
-        return _controlsEnabled = !_controlsEnabled;
+        _controlsEnabled = false;
+    }
+
+    public void EnableControls()
+    {
+        _controlsEnabled = true;
     }
 
     public void Movement(InputAction.CallbackContext context)
     {
+        if (!_controlsEnabled)
+        {
+            _movementController.MovementDirection = 0f;
+            return;
+        }
+
         _movementController.MovementDirection = context.ReadValue<float>();
     }
 
     public void Jump(InputAction.CallbackContext context)
     {
+        if (!_controlsEnabled)
+        {
+            _movementController.HoldingJump = false;
+            return;
+        }
+
         if (context.started)
             _movementController.HoldingJump = true;
 
@@ -35,6 +53,9 @@ public class InputController : MonoBehaviour
 
     public void SpawnPlatform(InputAction.CallbackContext context)
     {
+        if (!_controlsEnabled)
+            return;
+        
         if (_platformsController.choosenPlatform == PLATFORM.NONE) return;
 
         if (context.started)
@@ -52,6 +73,9 @@ public class InputController : MonoBehaviour
 
     public void DisplaySelectionWheel(InputAction.CallbackContext context)
     {
+        if (!_controlsEnabled)
+            return;
+
         if (context.performed)
             _platformsController.ToggleSelectionWheel(true);
         

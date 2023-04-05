@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3930973155356317965}
   - component: {fileID: 1516764716085911955}
   - component: {fileID: 4902241317658980220}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6201816106250508578}
   - component: {fileID: 7659875217978768554}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 6201816106827387262}
   - component: {fileID: 6201816106827387261}
   - component: {fileID: 6201816106827387260}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Bouncing Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2527828978375875081}
   - component: {fileID: 3878899299473739873}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

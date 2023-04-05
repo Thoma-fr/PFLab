@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1843071351762386795}
   - component: {fileID: 1843071351762386794}
   - component: {fileID: 1843071351762386792}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Speed Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1843071351920110390}
   - component: {fileID: 1843071351920110391}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1843071352860913076}
   - component: {fileID: 1487333542429606250}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 1674329583883998288}
   - component: {fileID: 7520637050840789450}
   - component: {fileID: 5226072027041859141}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}

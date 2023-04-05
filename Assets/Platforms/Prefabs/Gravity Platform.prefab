@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3921085119224699624}
   - component: {fileID: 861373205413343061}
   - component: {fileID: 3624677353376243298}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 6825245113082890619}
   - component: {fileID: 7723935077487541946}
   - component: {fileID: 2339615719695072953}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GravityTube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7616813211912751908}
   - component: {fileID: 2342024597948218405}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 7616813212062528282}
   - component: {fileID: 7616813212062528283}
   - component: {fileID: 8033766395606760131}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gravity Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,9 +442,8 @@ MonoBehaviour:
   _platformGFX: {fileID: 2342024597948218405}
   _tubeShapeController: {fileID: 2339615719695072953}
   _gravitySpeed: 0
-  _leftPoint: {fileID: 0}
-  _rightPoint: {fileID: 0}
   _tubeLengthLimit: 10
+  _slurpDuration: 0.5
 --- !u!61 &8033766395606760131
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -481,7 +480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1928259523345752071}
   - component: {fileID: 5100809630552715116}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
