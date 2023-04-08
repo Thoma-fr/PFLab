@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-    private Rigidbody2D _rb2D;
+    private URigidbody2D _urb;
+    private InputController _inputs;
 
     [Header("Movement")]
     [SerializeField]
@@ -17,7 +18,7 @@ public class MovementController : MonoBehaviour
     private float _airAccelerationFactor;
     [SerializeField, Tooltip("Force de freinage.")]
     private float _deccelerationStrength;
-    public float MovementDirection { get; set; }
+    public Vector2 MovementDirection { get; set; }
 
     [Header("Jump")]
     [SerializeField, Range(0, 2f)]
@@ -35,7 +36,6 @@ public class MovementController : MonoBehaviour
     [SerializeField, Tooltip("Vitesse a laquelle la duree du saut passe du min au max pendant qu'on reste appuye sur la touche de saut.")]
     private float _jumpDurationMultiplier;
 
-    private float _defaultGravityScale;
     private float _currentJumpDuration;
     private Coroutine _jumpCoroutine;
     public bool HoldingJump { get; set; }
@@ -45,19 +45,27 @@ public class MovementController : MonoBehaviour
 
     private void Awake()
     {
-        _rb2D = GetComponent<Rigidbody2D>();
-        _defaultGravityScale = _rb2D.gravityScale;
+        _urb = GetComponent<URigidbody2D>();
+        _inputs = GetComponent<InputController>();
     }
 
-    private void Update() // A modifier pour le passage vers le new input system
+    private void Update()
     {
-        if(MovementDirection != 0)
-            Acceleration(MovementDirection);
-        else
+        if(_urb.RigidBody2D.gravityScale != 0)
         {
-            // Si le joueur se deplace et qu'il touche le sol, on le ralenti
-            if (_rb2D.velocity.sqrMagnitude > 0 && GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")))
-                Decceleration();
+            if(MovementDirection.x != 0)
+                Acceleration(MovementDirection);
+            else
+            {
+                // Si le joueur se deplace et qu'il touche le sol, on le ralenti
+                if (_urb.RigidBody2D.velocity.sqrMagnitude > 0 && GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")))
+                    Decceleration();
+            }
+        }
+        else // Joueur dans gravity tube
+        {
+            if (MovementDirection != Vector2.zero)
+                Acceleration(MovementDirection);
         }
 
         // Si le joueur touche le sol excepte les plateformes de bounce et de speed, on clamp sa vitesse.
@@ -95,47 +103,54 @@ public class MovementController : MonoBehaviour
     /// <summary> Limite la vitesse a maxSpeed </summary>
     public void ClampSpeed(float maxSpeed)
     {
-        if(_rb2D.velocity.sqrMagnitude > maxSpeed * maxSpeed)
-            _rb2D.velocity = maxSpeed * _rb2D.velocity.normalized;
+        if(_urb.RigidBody2D.velocity.sqrMagnitude > maxSpeed * maxSpeed)
+            _urb.RigidBody2D.velocity = maxSpeed * _urb.RigidBody2D.velocity.normalized;
     }
 
     /// <summary> Ralenti le joueur au cours du temps. </summary>
     private void Decceleration()
     {
-        _rb2D.velocity -= _deccelerationStrength * Time.deltaTime * _rb2D.velocity.normalized;
+        _urb.RigidBody2D.velocity -= _deccelerationStrength * Time.deltaTime * _urb.RigidBody2D.velocity.normalized;
 
-        if (_rb2D.velocity.sqrMagnitude < _minSpeed * _minSpeed)
-            _rb2D.velocity = Vector2.zero;
+        if (_urb.RigidBody2D.velocity.sqrMagnitude < _minSpeed * _minSpeed)
+            _urb.RigidBody2D.velocity = Vector2.zero;
     }
 
     /// <summary> Accelere le joueur au cours du temps dans la direction donnee. </summary>
-    private void Acceleration(float direction)
+    private void Acceleration(Vector2 direction)
     {
         if (GroundCheck(LayerMask.GetMask("Speed Platform")))
             return;
         
-        if (GroundCheck(~LayerMask.GetMask("Bouncing Platform")))
-            _rb2D.velocity += _accelerationStrength * Time.deltaTime * new Vector2(direction, 0).normalized;
-        else
-            _rb2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * new Vector2(direction, 0).normalized;
+        if (GroundCheck(~LayerMask.GetMask("Bouncing Platform"))) // On ground
+            _urb.RigidBody2D.velocity += _accelerationStrength * Time.deltaTime * new Vector2(direction.x, 0);
+        else if(_urb.RigidBody2D.gravityScale != 0) // In air but not in gravity tube
+            _urb.RigidBody2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * new Vector2(direction.x, 0);
+        else // In air and in gravity tube
+            _urb.RigidBody2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * direction;
     }
 
     private IEnumerator JumpCoroutine()
     {
         // Ajustement des valeurs avant d'initier le saut
-        _defaultGravityScale = _rb2D.gravityScale;
-        _rb2D.gravityScale = 0;
+        _urb.RigidBody2D.gravityScale = 0;
         _currentJumpDuration = _minJumpDuration;
 
         // Boucle de saut, change la vitesse verticale du joueur au cours du temps
         float t = 0;
         while(t < _currentJumpDuration)
         {
+            if (!_inputs.ControlsEnabled)
+            {
+                _jumpCoroutine = null;
+                yield break;
+            }
+
             // Petit check pour voir si on se cogne pas
             if (HeadCheck())
                 break;
 
-            _rb2D.velocity = new Vector2(_rb2D.velocity.x, _jumpStrength * _jumpVelocityCurve.Evaluate(t / _currentJumpDuration));
+            _urb.RigidBody2D.velocity = new Vector2(_urb.RigidBody2D.velocity.x, _jumpStrength * _jumpVelocityCurve.Evaluate(t / _currentJumpDuration));
 
             t += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
@@ -157,7 +172,7 @@ public class MovementController : MonoBehaviour
         if( _jumpCoroutine != null )
             StopCoroutine(_jumpCoroutine);
 
-        _rb2D.gravityScale = _defaultGravityScale;
+        _urb.ResetGravityScale();
         _jumpCoroutine = null;
     }
 
@@ -169,7 +184,7 @@ public class MovementController : MonoBehaviour
         if(_maxJumpDuration < _minJumpDuration)
             _maxJumpDuration = _minJumpDuration;
 
-        GUIStyle labels = new GUIStyle();
+        GUIStyle labels = new();
         labels.alignment = TextAnchor.MiddleCenter;
         labels.normal.textColor = Color.black;
         labels.fontStyle = FontStyle.Bold;

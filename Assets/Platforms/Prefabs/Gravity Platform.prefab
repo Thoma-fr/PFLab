@@ -441,9 +441,9 @@ MonoBehaviour:
     m_RotationOrder: 4
   _platformGFX: {fileID: 2342024597948218405}
   _tubeShapeController: {fileID: 2339615719695072953}
-  _gravitySpeed: 0
+  _gravitySpeed: 6
   _tubeLengthLimit: 10
-  _slurpDuration: 0.5
+  _slurpDuration: 1
 --- !u!61 &8033766395606760131
 BoxCollider2D:
   m_ObjectHideFlags: 0

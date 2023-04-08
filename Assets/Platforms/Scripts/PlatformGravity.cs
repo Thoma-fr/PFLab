@@ -1,9 +1,8 @@
+using CoolDebugs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
-using CoolDebugs;
-using TreeEditor;
 
 public class PlatformGravity : Platform
 {
@@ -19,13 +18,15 @@ public class PlatformGravity : Platform
 
     private float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
-    private List<URigidbody2D> _bodies;
+    private List<URigidbody2D> _gravityMoveBodies;
+    private List<URigidbody2D> _slurpInBodies;
 
     //=========================================================
 
     private void Awake()
     {
-        _bodies = new List<URigidbody2D>();
+        _gravityMoveBodies = new List<URigidbody2D>();
+        _slurpInBodies = new List<URigidbody2D>();
         _tubeCollider = GetComponent<BoxCollider2D>();
 
         _tubeShapeController.spline.Clear();
@@ -39,18 +40,6 @@ public class PlatformGravity : Platform
         }
 
         CalculatePoints();
-    }
-
-    /// <summary> Moves the given rigidbody in the direction the platform is facing. </summary>
-    public void MoveRigidBodies()
-    {
-        if (_bodies.Count <= 0)
-            return;
-
-        //for(int i =  0; i < _bodies.Count; i++)
-        //{
-        //    _bodies[i].RigidBody2D.AddForce(9.81f * _bodies[i].RigidBody2D.gravityScale * _gravityScale * transform.up, ForceMode2D.Force);
-        //}
     }
 
     /// <summary> Calculates the points above and below the platform. </summary>
@@ -91,12 +80,94 @@ public class PlatformGravity : Platform
         _tubeCollider.offset = new Vector2(0, transform.InverseTransformPoint(middle).y);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (_isGhost)
+            return;
+
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
+        {
+            urb.DisableControls(); // Au cas ou le urb est le joueur.
+            StartCoroutine(LerpIn(urb));
+            _slurpInBodies.Add(urb);
+        }
+    }
+
+    /// <summary> Sluuurrrrpppp </summary>
+    private IEnumerator LerpIn(URigidbody2D urb)
+    {
+        Vector2 start = urb.transform.position;
+        Vector2 thisToObject = start - (Vector2)transform.position;
+
+        float dotProduct = Vector2.Dot(thisToObject, transform.up.normalized); // Ramene le joueur dans le tube si il entre par le dessus ou le dessous
+        if (dotProduct > _aboveDistance)
+        {
+            dotProduct = _aboveDistance * .80f;
+        }
+        else if (dotProduct < _belowDistance)
+        {
+            dotProduct = _belowDistance * .80f;
+        }
+
+        Vector2 end = transform.position + dotProduct * transform.up.normalized;
+
+#if UNITY_EDITOR
+        CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
+        CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
+#endif
+
+        urb.RigidBody2D.gravityScale = 0;
+        urb.RigidBody2D.velocity = Vector2.zero;
+
+        float t = 0;
+        while (t < 1)
+        {
+            urb.transform.position = Vector2.LerpUnclamped(start, end, t);
+            t += Time.fixedDeltaTime / _slurpDuration;
+            yield return new WaitForFixedUpdate();
+        }
+
+        urb.EnableControls();
+        urb.RigidBody2D.velocity = Vector2.zero;
+        _slurpInBodies.Remove(urb);
+        _gravityMoveBodies.Add(urb);
+
+        yield break;
+    }
+
+    private void FixedUpdate()
+    {
+        if (_isGhost)
+            return;
+
+        MoveRigidBodies();
+    }
+
+    /// <summary> Moves the given rigidbody in the direction the platform is facing. </summary>
+    public void MoveRigidBodies()
+    {
+        if (_gravityMoveBodies.Count <= 0)
+            return;
+
+        for (int i = 0; i < _gravityMoveBodies.Count; i++)
+        {
+            Rigidbody2D rb = _gravityMoveBodies[i].RigidBody2D;
+            rb.velocity = _gravitySpeed * transform.up + transform.right * Vector2.Dot(rb.velocity, transform.right);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        CalculatePoints();
+        DrawShape();
+    }
+
     private void DrawShape()
     {
         float width = _tubeCollider.size.x;
         Vector2 pointPosition = Vector2.zero;
 
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             switch (i)
             {
@@ -123,68 +194,6 @@ public class PlatformGravity : Platform
         }
     }
 
-    private void LateUpdate()
-    {
-        CalculatePoints();
-        DrawShape();
-    }
-
-    /// <summary> Sluuurrrrpppp </summary>
-    private IEnumerator LerpIn(URigidbody2D urb)
-    {
-        Vector2 start = urb.transform.position;
-        Vector2 thisToObject = start - (Vector2)transform.position;
-
-        float dotProduct = Vector2.Dot(thisToObject, transform.up.normalized); // Ramene le joueur dans le tube si il entre par le dessus ou le dessous
-        if(dotProduct > _aboveDistance)
-        {
-            dotProduct = _aboveDistance * .95f;
-        }
-        else if (dotProduct < _belowDistance)
-        {
-            dotProduct = _belowDistance * .95f;
-        }
-
-        Vector2 end = transform.position + dotProduct * transform.up.normalized;
-
-        CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
-        CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
-
-        urb.RigidBody2D.gravityScale = 0;
-        urb.RigidBody2D.velocity = Vector2.zero;
-
-        float t = 0;
-        while (t < 1)
-        {
-            urb.transform.position = Vector2.LerpUnclamped(start, end, t);
-            t += Time.fixedDeltaTime / _slurpDuration;
-            yield return new WaitForFixedUpdate();
-        }
-
-        urb.ResetGravityScale();
-        urb.EnableControls();
-        _bodies.Add(urb);
-
-        yield break;
-    }
-
-    private void OnDestroy() // TODO : Reset tous les urb qui sont entrains d'etre SLURP
-    {
-        _bodies.Clear();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (_isGhost)
-            return;
-
-        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
-        {
-            urb.DisableControls(); // Au cas ou le urb est le joueur.
-            StartCoroutine(LerpIn(urb));
-        }
-    }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (_isGhost)
@@ -192,15 +201,24 @@ public class PlatformGravity : Platform
 
         if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
-            _bodies.Remove(urb);
+            _gravityMoveBodies.Remove(urb);
+            urb.ResetGravityScale();
         }
     }
 
-    private void FixedUpdate()
+    private void OnDestroy() // L'erreur quand on sort du play mode c'est NORMAL
     {
-        if (_isGhost)
-            return;
+        foreach(var b in _gravityMoveBodies)
+        {
+            b.ResetGravityScale();
+        }
+        _gravityMoveBodies.Clear();
 
-        MoveRigidBodies();
+        foreach (var b in _slurpInBodies)
+        {
+            b.EnableControls();
+            b.ResetGravityScale();
+        }
+        _slurpInBodies.Clear();
     }
 }

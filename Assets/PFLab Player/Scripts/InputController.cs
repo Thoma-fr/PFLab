@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour
 {
     private bool _controlsEnabled;
+    public bool ControlsEnabled => _controlsEnabled;
     public bool EnabledControls => _controlsEnabled;
     private MovementController _movementController;
     private PlatformsController _platformsController;
@@ -29,11 +30,11 @@ public class InputController : MonoBehaviour
     {
         if (!_controlsEnabled)
         {
-            _movementController.MovementDirection = 0f;
+            _movementController.MovementDirection = Vector2.zero;
             return;
         }
 
-        _movementController.MovementDirection = context.ReadValue<float>();
+        _movementController.MovementDirection = context.ReadValue<Vector2>();
     }
 
     public void Jump(InputAction.CallbackContext context)
