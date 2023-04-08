@@ -21,7 +21,14 @@ public class BallDetector : MonoBehaviour
     {
         if (other.CompareTag("Balls"))
         {
-            isPressed = true;
+            thingToActive.SetActive(false);
+        }
+    }
+    private void OnTriggerExite2D(Collider2D other)
+    {
+        if (other.CompareTag("Balls"))
+        {
+            thingToActive.SetActive(true);
         }
     }
 }
