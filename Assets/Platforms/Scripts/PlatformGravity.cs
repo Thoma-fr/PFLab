@@ -129,24 +129,23 @@ public class PlatformGravity : Platform
         DrawShape();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (_isGhost)
-            return;
-
-        if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
-        {
-            urb.DisableControls(); // Au cas ou le urb est le joueur.
-            StartCoroutine(LerpIn(urb));
-        }
-    }
-
     /// <summary> Sluuurrrrpppp </summary>
     private IEnumerator LerpIn(URigidbody2D urb)
     {
         Vector2 start = urb.transform.position;
         Vector2 thisToObject = start - (Vector2)transform.position;
-        Vector2 end = transform.position + Vector2.Dot(thisToObject, transform.up.normalized) * transform.up.normalized;
+
+        float dotProduct = Vector2.Dot(thisToObject, transform.up.normalized); // Ramene le joueur dans le tube si il entre par le dessus ou le dessous
+        if(dotProduct > _aboveDistance)
+        {
+            dotProduct = _aboveDistance * .95f;
+        }
+        else if (dotProduct < _belowDistance)
+        {
+            dotProduct = _belowDistance * .95f;
+        }
+
+        Vector2 end = transform.position + dotProduct * transform.up.normalized;
 
         CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
         CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
@@ -169,9 +168,21 @@ public class PlatformGravity : Platform
         yield break;
     }
 
-    private void OnDestroy()
+    private void OnDestroy() // TODO : Reset tous les urb qui sont entrains d'etre SLURP
     {
         _bodies.Clear();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (_isGhost)
+            return;
+
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
+        {
+            urb.DisableControls(); // Au cas ou le urb est le joueur.
+            StartCoroutine(LerpIn(urb));
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
