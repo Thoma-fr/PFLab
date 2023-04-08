@@ -15,6 +15,8 @@ public class PlatformGravity : Platform
     private float _tubeLengthLimit;
     [SerializeField, Tooltip("The time it take for the object to reach the center of the tube."), Range(0.01f, 1f)]
     private float _slurpDuration;
+    [SerializeField, Tooltip("Slurp tweening")]
+    private AnimationCurve _slurpCurve;
 
     private float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
@@ -87,6 +89,9 @@ public class PlatformGravity : Platform
 
         if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
+            if (_slurpInBodies.Contains(urb))
+                return;
+
             urb.DisableControls(); // Au cas ou le urb est le joueur.
             StartCoroutine(LerpIn(urb));
             _slurpInBodies.Add(urb);
@@ -122,7 +127,7 @@ public class PlatformGravity : Platform
         float t = 0;
         while (t < 1)
         {
-            urb.transform.position = Vector2.LerpUnclamped(start, end, t);
+            urb.transform.position = Vector2.LerpUnclamped(start, end, _slurpCurve.Evaluate(t));
             t += Time.fixedDeltaTime / _slurpDuration;
             yield return new WaitForFixedUpdate();
         }
@@ -201,8 +206,12 @@ public class PlatformGravity : Platform
 
         if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
+            if (_slurpInBodies.Contains(urb))
+                return;
+
             _gravityMoveBodies.Remove(urb);
             urb.ResetGravityScale();
+            urb.EnableControls();
         }
     }
 

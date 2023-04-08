@@ -444,6 +444,39 @@ MonoBehaviour:
   _gravitySpeed: 6
   _tubeLengthLimit: 10
   _slurpDuration: 1
+  _slurpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.233973
+      outSlope: 2.233973
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.15416665
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.5
+      inSlope: 5.764198
+      outSlope: 5.764198
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.0333333
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!61 &8033766395606760131
 BoxCollider2D:
   m_ObjectHideFlags: 0
