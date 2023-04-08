@@ -66,7 +66,12 @@ public class Player2DController : MonoBehaviour
     [SerializeField] private float groundedSize;
     Vector3 mousePosition;
     GameObject newPF;
-    private Vector2 velocity;
+    [SerializeField] private Vector2 velocity;
+    [SerializeField] private float _accelerationStrength;
+    [SerializeField] private float _airAccelerationFactor;
+    [SerializeField] private bool isMoving;
+    [SerializeField] private float _deccelerationStrength;
+
     void Start()
     {
         if (instance == null)
@@ -143,20 +148,13 @@ public class Player2DController : MonoBehaviour
         
         if(canRotate)
         {
-            
-            //newPF.transform.LookAt(mousePosition);
             Vector3 dir = newPF.transform.InverseTransformPoint(mousePosition);
             var angle = Mathf.Atan2(dir.y, dir.x)*Mathf.Rad2Deg-90;
             newPF.transform.Rotate(0, 0, angle);
 
-            //float dist = Vector3.Distance(newPF.transform.position, mousePosition);
-            //Debug.Log(dist);
-            //if(newPF.transform.position.x> mousePosition.x)
-            //    newPF.transform.rotation = Quaternion.Euler(0, 0, dist* rotationMultiplyer);
-            //else
-            //    newPF.transform.rotation = Quaternion.Euler(0, 0, dist * -rotationMultiplyer);
         }
     }
+
     public void FollowMouse()
     {
         if (choosenPF == PFenum.None) return;
@@ -167,28 +165,59 @@ public class Player2DController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (!isMoving)
+            Decceleration();
 
-        float targetSpeed = direction.x * speed;
-        if (!GroundCheck())
-            targetSpeed *= jumpSpeed;
-        float speedDif = targetSpeed - rb.velocity.x;
-        float accelRate = (Mathf.Abs(targetSpeed) > 0.001f) ? acceleration : decceleration;
-        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
-        rb.AddForce(movement * Vector2.right);
-        if (direction.x == 0 && rb.velocity.x != 0)
+
+        if (GroundCheck())
+            CapSpeed();
+        //float targetSpeed = direction.x * speed;
+        //if (!GroundCheck())
+        //    targetSpeed *= jumpSpeed;
+        //float speedDif = targetSpeed - rb.velocity.x;
+        //float accelRate = (Mathf.Abs(targetSpeed) > 0.001f) ? acceleration : decceleration;
+        //float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
+        //rb.AddForce(movement * Vector2.right);
+        //if (direction.x == 0 && rb.velocity.x != 0)
+        //{
+        //    float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAnmount));
+        //    amount *= Mathf.Sign(rb.velocity.x);
+        //    rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        //}
+
+    }
+    private void Decceleration()
+    {
+        rb.velocity -= _deccelerationStrength * rb.velocity.normalized;
+
+        if (rb.velocity.sqrMagnitude < 0.5f)
         {
-            float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAnmount));
-            amount *= Mathf.Sign(rb.velocity.x);
-            rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+            rb.velocity = Vector2.zero;
         }
     }
-
+    private void CapSpeed()
+    {
+        if (rb.velocity.sqrMagnitude > speed * speed)
+            rb.velocity = speed * rb.velocity.normalized;
+    }
     public void MovePlayer(InputAction.CallbackContext context)
     {
-        velocity = context.ReadValue<Vector2>();
-        direction = context.ReadValue<Vector2>();
-        animator.SetFloat("VelocityX", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("VelocityY", rb.velocity.y);
+        if (context.performed)
+        {
+            velocity = context.ReadValue<Vector2>();
+            direction = context.ReadValue<Vector2>();
+            isMoving = true;
+            if (GroundCheck())
+                rb.velocity += _accelerationStrength * direction;
+            else
+                rb.velocity += _accelerationStrength * _airAccelerationFactor * direction;
+
+        }
+        else if(context.canceled)
+            isMoving = false;
+
+        //animator.SetFloat("VelocityX", Mathf.Abs(rb.velocity.x));
+        //animator.SetFloat("VelocityY", rb.velocity.y);
         if (rb.velocity.x < 0)
             sprite.flipX = true;
         else
@@ -228,8 +257,12 @@ public class Player2DController : MonoBehaviour
     }
     public bool GroundCheck()
     {
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, col.bounds.min.y), -gameObject.transform.up, groundedSize);
-        Debug.DrawRay(new Vector2(transform.position.x, col.bounds.min.y), -gameObject.transform.up * groundedSize, Color.magenta);
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, .5f, Vector2.down, groundedSize, ~LayerMask.GetMask("Bouncing Platform"));
+
+        if (hit)
+            CoolDebugs.CoolDebugs.DrawWireSphere((Vector2)transform.position + groundedSize * Vector2.down, .5f, Color.green, Time.fixedDeltaTime);
+        else
+            CoolDebugs.CoolDebugs.DrawWireSphere((Vector2)transform.position + groundedSize * Vector2.down, .5f, Color.red, Time.fixedDeltaTime);
 
         return hit;
     }
