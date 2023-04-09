@@ -11,6 +11,7 @@ public class Laser : MonoBehaviour, IGhostable
     private bool _isGhost;
     private Color _laserColor;
     private Color _laserGhostColor;
+    private ILaserable _lastLaserableObject;
 
     private Laser _reflectedLaser; // The reflected laser
 
@@ -100,6 +101,19 @@ public class Laser : MonoBehaviour, IGhostable
             if (_reflectedLaser && _reflectedLaser.gameObject.activeSelf)
                     _reflectedLaser.DeactivateLaser();
         }
+
+        // Activation stuff
+        if (!_isGhost && hit.transform.gameObject.TryGetComponent(out ILaserable laserable))
+        {
+            if(_lastLaserableObject != null && _lastLaserableObject != laserable)
+            {
+                _lastLaserableObject.LaserStop();
+                _lastLaserableObject = laserable;
+            }
+            else _lastLaserableObject ??= laserable;
+
+            laserable.LaserReaction();
+        }
     }
 
     private void NoCollision(Vector2 origin, Vector2 dir)
@@ -111,6 +125,13 @@ public class Laser : MonoBehaviour, IGhostable
         // Deactive all the child reflections
         if(_reflectedLaser && _reflectedLaser.gameObject.activeSelf)
             _reflectedLaser.DeactivateLaser();
+
+        // Deactivation stuff
+        if (_lastLaserableObject != null)
+        {
+            _lastLaserableObject.LaserStop();
+            _lastLaserableObject = null;
+        }
     }
 
     public void UpdateLaser(Vector2 origin, Vector2 dir, bool isGhost)

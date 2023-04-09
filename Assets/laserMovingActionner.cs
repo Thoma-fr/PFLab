@@ -1,27 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class laserMovingActionner : MonoBehaviour, IlaserAble
+public class LaserMovingActionner : MonoBehaviour, ILaserable
 {
     public ActivateMovingPlateform plateform;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
     public void LaserReaction()
     {
         plateform.canMove = true;
+        transform.rotation *= Quaternion.Euler(0, 0, Time.deltaTime * 100);
     }
     public void LaserStop()
     {
         plateform.canMove = false;
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

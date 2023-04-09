@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class LaserDetector : MonoBehaviour, IlaserAble
+public class LaserDetector : MonoBehaviour, ILaserable
 {
     public GameObject gateToOpen;
     // Start is called before the first frame update
