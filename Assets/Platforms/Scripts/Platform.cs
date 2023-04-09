@@ -35,7 +35,7 @@ public class Platform : MonoBehaviour, IGhostable
 
         if(_coll == null)
         {
-            if(TryGetComponent<Collider2D>(out _coll))
+            if(TryGetComponent<Collider2D>(out _coll) && gameObject.layer != LayerMask.NameToLayer("Ghost Mirror Platform"))
                 _coll.enabled = false;
         }
         else

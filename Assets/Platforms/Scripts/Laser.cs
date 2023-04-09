@@ -4,6 +4,7 @@ public class Laser : MonoBehaviour, IGhostable
 {
 
     private int _laserNb;
+    private int _maxNbOfLasers;
     private float _damagePerSecond;
     private float _laserRange;
     private LineRenderer _lineRenderer;
@@ -15,7 +16,7 @@ public class Laser : MonoBehaviour, IGhostable
 
     //=========================================================
 
-    private void CreateLaser(int maxNbOfLasers)
+    private void CreateLaser()
     {
         if (!_reflectedLaser)
         {
@@ -26,7 +27,7 @@ public class Laser : MonoBehaviour, IGhostable
             _reflectedLaser = laserGO.AddComponent<Laser>();
 
             _reflectedLaser.InitiateLaser(
-                maxNbOfLasers: maxNbOfLasers,
+                maxNbOfLasers: _maxNbOfLasers,
                 laserNb: _laserNb + 1,
                 damagePerSecond: _damagePerSecond,
                 laserRange: _laserRange,
@@ -45,6 +46,7 @@ public class Laser : MonoBehaviour, IGhostable
         _damagePerSecond = damagePerSecond;
         _laserRange = laserRange;
         _laserNb = laserNb;
+        _maxNbOfLasers = maxNbOfLasers;
 
         _lineRenderer = gameObject.AddComponent<LineRenderer>();
         _lineRenderer.positionCount = 2;
@@ -62,9 +64,9 @@ public class Laser : MonoBehaviour, IGhostable
         else
             RenderPhysical();
 
-        if(_laserNb < maxNbOfLasers)
+        if(_laserNb < _maxNbOfLasers)
         {
-            CreateLaser(maxNbOfLasers);
+            CreateLaser();
         }
     }
 
@@ -118,11 +120,21 @@ public class Laser : MonoBehaviour, IGhostable
         else
             RenderPhysical();
 
-        RaycastHit2D hit = Physics2D.Raycast(origin, dir, _laserRange);
+        RaycastHit2D hit = Physics2D.Raycast(origin, dir, _laserRange, ~LayerMask.GetMask("Ghost Mirror Platform"));
         if (hit)
             Collision(origin, dir, hit);
         else
             NoCollision(origin, dir);
+
+        if (!isGhost)
+        {
+            hit = Physics2D.Raycast(origin, dir, _laserRange);
+            if (hit && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ghost Mirror Platform"))
+            {
+                if (hit.transform.TryGetComponent(out PlatformMirror mirror))
+                    mirror.GhostReflectLaser(hit.point, dir.normalized, hit.normal, _maxNbOfLasers, _laserNb, _laserRange, _lineRenderer.startWidth, _lineRenderer.material, _lineRenderer.sortingOrder, _laserGhostColor);
+            }
+        }
     }
 
     public void Ghostify()
