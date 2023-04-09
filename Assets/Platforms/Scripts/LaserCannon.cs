@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformLaser : Platform
+public class LaserCannon : MonoBehaviour
 {
     [Header("Laser settings")]
     [SerializeField, Tooltip("How much damage the laser deals per second.")]
@@ -23,6 +25,7 @@ public class PlatformLaser : Platform
     private Color _laserGhostColor;
 
     private Laser _laser;
+    private Platform _parentPlatform;
 
     //=========================================================
 
@@ -46,13 +49,15 @@ public class PlatformLaser : Platform
                 laserOrderInLayer: _laserOrderInLayer,
                 laserColor: _laserColor,
                 laserGhostColor: _laserGhostColor,
-                isGhost: _isGhost
+                isGhost: true
                 );
         }
     }
 
     private void Start()
     {
+        transform.parent.TryGetComponent(out _parentPlatform);
+
         CreateLaser();
         _laser.DeactivateLaser();
         _laser.gameObject.SetActive(true);
@@ -60,6 +65,6 @@ public class PlatformLaser : Platform
 
     private void Update()
     {
-        _laser.UpdateLaser(transform.position, transform.up, _isGhost);
+        _laser.UpdateLaser(transform.position, transform.up, _parentPlatform == null ? false : _parentPlatform.IsGhost);
     }
 }
