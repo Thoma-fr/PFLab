@@ -90,7 +90,8 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color_1: {r: 0.3254902, g: 0.9686275, b: 1, a: 1}
+    - _Color_1: {r: 0.70837605, g: 0.002428216, b: 0.011612245, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 1, b: 0.542906, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
