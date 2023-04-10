@@ -72,6 +72,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
+    - _GradientScale: 3
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Speed: 1
@@ -79,4 +80,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _power: {r: 1, g: 1, b: 0, a: 0}
+    - _speed2: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
