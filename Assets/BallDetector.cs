@@ -24,7 +24,7 @@ public class BallDetector : MonoBehaviour
             thingToActive.SetActive(false);
         }
     }
-    private void OnTriggerExite2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Balls"))
         {
