@@ -41,7 +41,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385883923701722359}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -58,7 +58,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5, y: 0.31}
+  m_Size: {x: 5.3, y: 0.31}
   m_EdgeRadius: 0
 --- !u!114 &385883923701722356
 MonoBehaviour:
@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostColor: {r: 0, g: 0.96072483, b: 1, a: 0.4117647}
+  redColor: {r: 1, g: 0, b: 0, a: 0.40392157}
   _spriteRenderers:
   - {fileID: 6274521374252788901}
   - {fileID: 6355832533426962070}
@@ -303,7 +304,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3721172105455721534}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 2.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -443,8 +444,8 @@ SpriteShapeRenderer:
   m_Sprites:
   - {fileID: 2108571844, guid: 557ea218dd62aee43b108a2e97b13cb7, type: 3}
   m_LocalAABB:
-    m_Center: {x: 1.25, y: 0, z: 0}
-    m_Extent: {x: 0.75, y: 0.15625, z: 0}
+    m_Center: {x: 1.5, y: 0, z: 0}
+    m_Extent: {x: 1, y: 0.15625, z: 0}
 --- !u!114 &2113188386985180395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +471,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 0
       m_CornerMode: 1
-    - position: {x: 2, y: 0, z: 0}
+    - position: {x: 2.5, y: 0, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
       mode: 0
@@ -745,8 +746,8 @@ SpriteShapeRenderer:
   m_Sprites:
   - {fileID: 2108571844, guid: 557ea218dd62aee43b108a2e97b13cb7, type: 3}
   m_LocalAABB:
-    m_Center: {x: -1.25, y: 0, z: 0}
-    m_Extent: {x: 0.75, y: 0.15625, z: 0}
+    m_Center: {x: -1.5, y: 0, z: 0}
+    m_Extent: {x: 1, y: 0.15625, z: 0}
 --- !u!114 &8028731359787561647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,7 +763,7 @@ MonoBehaviour:
   m_Spline:
     m_IsOpenEnded: 1
     m_ControlPoints:
-    - position: {x: -2, y: 0, z: 0}
+    - position: {x: -2.5, y: -0, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
       mode: 0
@@ -823,7 +824,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8267040178615601365}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalPosition: {x: -2.5, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

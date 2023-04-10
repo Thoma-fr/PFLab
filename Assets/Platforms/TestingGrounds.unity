@@ -136,11 +136,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 385883923701722358, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.0691166
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 385883923701722358, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.1788356
+      value: -1.89
       objectReference: {fileID: 0}
     - target: {fileID: 385883923701722358, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_LocalPosition.z
@@ -214,6 +214,22 @@ PrefabInstance:
       propertyPath: _spriteRenderers.Array.data[5]
       value: 
       objectReference: {fileID: 480686707}
+    - target: {fileID: 3509054198594170439, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Center.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509054198594170439, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509054198594170439, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3509054198594170439, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.y
+      value: 0.15625
+      objectReference: {fileID: 0}
     - target: {fileID: 3721172105455721534, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -221,6 +237,22 @@ PrefabInstance:
     - target: {fileID: 4289763323289121398, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186689904771084354, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Center.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186689904771084354, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186689904771084354, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186689904771084354, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.y
+      value: 0.15625
       objectReference: {fileID: 0}
     - target: {fileID: 6625930921680884279, guid: 676aeeb7e3d939b45807ca46e2efff72, type: 3}
       propertyPath: m_IsActive

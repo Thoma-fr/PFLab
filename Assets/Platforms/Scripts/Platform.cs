@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -79,7 +78,7 @@ public class Platform : MonoBehaviour, IGhostable
         else
             _coll.enabled = true;
 
-        _platformGFX.MakeCorporeal();
+        _platformGFX.DefaultColor();
     }
 
     /// <summary> Checks the surrounding area to see if there is enough space to spawn at least a _minSize sized platform. </summary>
@@ -123,8 +122,18 @@ public class Platform : MonoBehaviour, IGhostable
     /// <summary> Get regions that should be visible based on left and right width; </summary>
     private Transform[,] GetRegionsToSpawn()
     {
-        if(!IsThereEnoughSpace())
+        if (!IsThereEnoughSpace())
+        {
+            _platformGFX.MakeRed();
             return null;
+        }
+        else
+        {
+            if(!_isGhost)
+                _platformGFX.DefaultColor();
+            else
+                _platformGFX.MakeGhost();
+        }
 
         // Cas ou left et right sont tres petits
         if (_leftWidth < _stepsMinWidth[0] * .5f && _rightWidth < _stepsMinWidth[0] * .5f)
@@ -134,12 +143,12 @@ public class Platform : MonoBehaviour, IGhostable
 
         for(int i = 0; i < _stepsMinWidth.Length; i++)
         {
-            if (_leftWidth >= _stepsMinWidth[i])
+            if (_leftWidth >= _stepsMinWidth[i] * .5f)
             {
                 ret[0, i] = _platformSidesLimits[0].regions[i];
             }
 
-            if (_rightWidth >= _stepsMinWidth[i])
+            if (_rightWidth >= _stepsMinWidth[i] * .5f)
             {
                 ret[1, i] = _platformSidesLimits[1].regions[i];
             }
@@ -158,9 +167,9 @@ public class Platform : MonoBehaviour, IGhostable
 
         // Max width
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(-.5f * _maxWidth * transform.right + upOffset, .5f * _maxWidth * transform.right + upOffset);
-        Gizmos.DrawCube(-.5f * _maxWidth * transform.right + upOffset, new(0.01f, .1f));
-        Gizmos.DrawCube(.5f * _maxWidth * transform.right + upOffset, new(0.01f, .1f));
+        Gizmos.DrawLine(transform.position - .5f * _maxWidth * transform.right + upOffset, transform.position + .5f * _maxWidth * transform.right + upOffset);
+        Gizmos.DrawCube(transform.position - .5f * _maxWidth * transform.right + upOffset, new(0.01f, .1f));
+        Gizmos.DrawCube(transform.position + .5f * _maxWidth * transform.right + upOffset, new(0.01f, .1f));
 
         // Steps widths
         for(int i = _stepsMinWidth.Length - 1; i >= 0; i--)
@@ -179,16 +188,16 @@ public class Platform : MonoBehaviour, IGhostable
             }
 
             Gizmos.color = Color.Lerp(Color.red, Color.green, (i + 1) / (float)(_stepsMinWidth.Length + 1));
-            Gizmos.DrawLine(-.5f * _stepsMinWidth[i] * transform.right + upOffset, .5f * _stepsMinWidth[i] * transform.right + upOffset);
-            Gizmos.DrawCube(-.5f * _stepsMinWidth[i] * transform.right + upOffset, new(0.01f, .1f));
-            Gizmos.DrawCube(.5f * _stepsMinWidth[i] * transform.right + upOffset, new(0.01f, .1f));
+            Gizmos.DrawLine(transform.position - .5f * _stepsMinWidth[i] * transform.right + upOffset, transform.position + .5f * _stepsMinWidth[i] * transform.right + upOffset);
+            Gizmos.DrawCube(transform.position - .5f * _stepsMinWidth[i] * transform.right + upOffset, new(0.01f, .1f));
+            Gizmos.DrawCube(transform.position + .5f * _stepsMinWidth[i] * transform.right + upOffset, new(0.01f, .1f));
         }
 
         // Min width
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(-.5f * _minWidth * transform.right + upOffset, .5f * _minWidth * transform.right + upOffset);
-        Gizmos.DrawCube(-.5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
-        Gizmos.DrawCube(.5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
+        Gizmos.DrawLine(transform.position - .5f * _minWidth * transform.right + upOffset, transform.position + .5f * _minWidth * transform.right + upOffset);
+        Gizmos.DrawCube(transform.position - .5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
+        Gizmos.DrawCube(transform.position + .5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
 
         // A SUPPRIMER SINON OUCH OUILLE LES PERFS HOLALA
         {
@@ -225,15 +234,19 @@ public class Platform : MonoBehaviour, IGhostable
                 }
             }
 
+            // Active et regle la taille des Extenders
             int side = 0;
             foreach(PlatformSide platformSide in _platformSidesLimits)
             {
                 for(int i = platformSide.regions.Length - 1; i >= 1; i--)
                 {
+                    if(i == platformSide.regions.Length - 1 && platformSide.regions[i])
+                        platformSide.regions[i].localPosition = (side == 0 ? - _leftWidth : _rightWidth) * Vector2.right;
+
                     SpriteShapeController ssc = _platformSidesExtenders[side].regions[i - 1]?.GetComponent<SpriteShapeController>();
                     ssc.spline.Clear();
-                    ssc.spline.InsertPointAt(0, side == 0 ? platformSide.regions[i].position : platformSide.regions[i - 1].position);
-                    ssc.spline.InsertPointAt(1, side == 0 ? platformSide.regions[i - 1].position : platformSide.regions[i].position);
+                    ssc.spline.InsertPointAt(0, side == 0 ? platformSide.regions[i].localPosition : platformSide.regions[i - 1].localPosition);
+                    ssc.spline.InsertPointAt(1, side == 0 ? platformSide.regions[i - 1].localPosition : platformSide.regions[i].localPosition);
                     ssc.gameObject.SetActive(platformSide.regions[i].gameObject.activeSelf);
                 }
 
