@@ -62,6 +62,9 @@
         },
         {
             "m_Id": "5c8b8ed81a894fec9bbc7ba4ed4a27f9"
+        },
+        {
+            "m_Id": "96965b3cf27d4aaebc80c52380436120"
         }
     ],
     "m_GroupDatas": [],
@@ -163,6 +166,20 @@
                     "m_Id": "929fe2378d594c89a233f56571631de9"
                 },
                 "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "96965b3cf27d4aaebc80c52380436120"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "96168184994b4e70933a0c35087ba948"
+                },
+                "m_SlotId": 1
             }
         }
     ],
@@ -584,6 +601,19 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
+    "m_ObjectId": "405b22997a25446782a28bc144fcd453",
+    "m_Id": 0,
+    "m_DisplayName": "MainTex",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
 }
 
 {
@@ -1113,6 +1143,41 @@
     "m_TextureType": 0,
     "m_NormalMapSpace": 0,
     "m_EnableGlobalMipBias": true
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "96965b3cf27d4aaebc80c52380436120",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1702.0,
+            "y": 160.00001525878907,
+            "width": 128.9998779296875,
+            "height": 33.99995422363281
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "405b22997a25446782a28bc144fcd453"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "19bc9dad06094a7daeafa2ad2403c543"
+    }
 }
 
 {
