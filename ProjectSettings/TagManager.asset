@@ -19,7 +19,7 @@ TagManager:
   - Speed Platform
   - Bouncing Platform
   - Ghost Mirror Platform
-  - 
+  - Distortion
   - 
   - 
   - 
@@ -45,4 +45,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 2079676371
+    locked: 0
+  - name: DistortionEffect
+    uniqueID: 3201922327
     locked: 0

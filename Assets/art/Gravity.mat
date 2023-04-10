@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Gravity
+  m_Shader: {fileID: -6465566751694194690, guid: b46a8d35f55bccf4bb275eca77b9512c, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DitortionTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d02c276d920b4f2b821202b65f2d6a4a_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 1133f9d03883a0343a0f9981c772251f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7ca458bef2edd9c42bc4b0819832010d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _EnableExternalAlpha: 0
+    - _OndulationScale: 0.1
+    - _Tilling: 1
+    - _distortiontilling: 0.65
+    - _ondulationspeed: 1
+    - _speed: -0.5
+    m_Colors:
+    - _Color: {r: 0.5254902, g: 1.4901961, b: 1.772549, a: 1}
+    - _Color_1: {r: 0.5490196, g: 0.8784314, b: 0.9490197, a: 1}
+    - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _PickedColor: {r: 0.5490196, g: 0.8784314, b: 0.9490197, a: 1}
+    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _direction: {r: 0.1, g: 0, b: 0, a: 0}
+    - _distortionDirection: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
