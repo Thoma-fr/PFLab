@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class PFUIChoice : MonoBehaviour,IPointerEnterHandler
+public class PFUIChoice : MonoBehaviour, IPointerEnterHandler
 {
     [SerializeField] private int id;
+    private PFUIContainer _container;
 
+    private void Awake()
+    {
+        _container = GetComponentInParent<PFUIContainer>();
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Player2DController.instance.SelectPF(id);
-        Debug.Log("mouse enter");
+        if(_container)
+            _container.SelectPF(id);
     }
 }

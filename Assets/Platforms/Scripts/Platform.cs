@@ -7,9 +7,9 @@ public class Platform : MonoBehaviour, IGhostable
     [SerializeField, Tooltip("Max life time of the platform.")]
     private float _lifeTime;
     [SerializeField, Tooltip("Minimum width of the platform.")]
-    private float _minSize;
+    private float _minWidth;
     [SerializeField, Tooltip("Maximum width of the platform.")]
-    private float _maxSize;
+    private float _maxWidth;
     [SerializeField, Tooltip("Duration of the creation and destruction animations of the platform.")]
     private float _animationDuration;
     [SerializeField, Tooltip("Tweening of the creation and destruction animations of the platform.")]
@@ -22,20 +22,20 @@ public class Platform : MonoBehaviour, IGhostable
     private Collider2D _coll;
     private float _age; // Current age of the platform.
     private const float _height = 1f; // Height of the platform, should always be a fixed number.
-    private float _width; // Width of the platform, varies in relation to the available space. Capped at _minSize and _maxSize.
+    protected float _width; // Width of the platform, varies in relation to the available space. Capped at _minSize and _maxSize.
     protected bool _isGhost; // Is the current platform in ghost mode or not ?
+    public bool IsGhost => _isGhost;
 
     //=========================================================================================================
 
     public void Ghostify()
     {
-        Debug.Log("Ghostifying " + name);
         _isGhost = true;
         DrawGhost();
 
         if(_coll == null)
         {
-            if(TryGetComponent<Collider2D>(out _coll))
+            if(TryGetComponent<Collider2D>(out _coll) && gameObject.layer != LayerMask.NameToLayer("Ghost Mirror Platform"))
                 _coll.enabled = false;
         }
         else
@@ -45,7 +45,6 @@ public class Platform : MonoBehaviour, IGhostable
     }
     public void RenderPhysical()
     {
-        Debug.Log("Un-ghostifying " + name);
         _isGhost = false;
         CreatePlatform();
 

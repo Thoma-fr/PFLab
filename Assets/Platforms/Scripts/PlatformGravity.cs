@@ -1,3 +1,5 @@
+using CoolDebugs;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -5,104 +7,79 @@ using UnityEngine.U2D;
 public class PlatformGravity : Platform
 {
     [Header("Gravity settings")]
-    [SerializeField, Tooltip("How much force this platform exerts on the object in relation to its gravity.")]
-    private float _gravityScale;
-    [SerializeField, Tooltip("Left and right Raycast points")]
-    private Transform _leftPoint, _rightPoint;
-    [SerializeField, Tooltip("Number of raycasts cast above and below the platform."), Range(2, 100)]
-    private int _raycastPrecision;
-    [SerializeField, Tooltip("Max distance of the raycast."), Range(10, 500)]
-    private float _raycastLengthLimit;
-
-    private Vector2[] _abovePoints, _belowPoints;
-    private SpriteShapeRenderer _tubeShapeRenderer;
+    [SerializeField, Tooltip("SpriteShapeController of the gravity tube.")]
     private SpriteShapeController _tubeShapeController;
-    private PolygonCollider2D _tubeCollider;
-    private List<URigidbody2D> _bodies;
+    [SerializeField, Tooltip("How fast is the rigidBody traveling through the tube.")]
+    private float _gravitySpeed;
+    [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(10, 500)]
+    private float _tubeLengthLimit;
+    [SerializeField, Tooltip("The time it take for the object to reach the center of the tube."), Range(0.01f, 1f)]
+    private float _slurpDuration;
+    [SerializeField, Tooltip("Slurp tweening")]
+    private AnimationCurve _slurpCurve;
+
+    private float _aboveDistance, _belowDistance;
+    private BoxCollider2D _tubeCollider;
+    private List<URigidbody2D> _gravityMoveBodies;
+    private List<URigidbody2D> _slurpInBodies;
 
     //=========================================================
 
     private void Awake()
     {
-        _bodies = new List<URigidbody2D>();
-        _abovePoints = new Vector2[_raycastPrecision];
-        _belowPoints = new Vector2[_raycastPrecision];
-        _tubeShapeController = GetComponent<SpriteShapeController>();
-        _tubeShapeRenderer = GetComponent<SpriteShapeRenderer>();
-        _tubeCollider = GetComponent<PolygonCollider2D>();
+        _gravityMoveBodies = new List<URigidbody2D>();
+        _slurpInBodies = new List<URigidbody2D>();
+        _tubeCollider = GetComponent<BoxCollider2D>();
+
+        _tubeShapeController.spline.Clear();
+
+        if (_tubeShapeController.spline.GetPointCount() == 0)
+        {
+            _tubeShapeController.spline.InsertPointAt(0, new Vector2(0, 0));
+            _tubeShapeController.spline.InsertPointAt(1, new Vector2(0, 1));
+            _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
+            _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
+        }
 
         CalculatePoints();
-        FirstDrawShape();
-    }
-
-    /// <summary> Moves the given rigidbody in the direction the platform is facing. </summary>
-    public void MoveRigidBodies()
-    {
-        if (_bodies.Count <= 0)
-            return;
-
-        for(int i =  0; i < _bodies.Count; i++)
-        {
-            _bodies[i].Rb.AddForce(9.81f * _bodies[i].Rb.gravityScale * _gravityScale * transform.up, ForceMode2D.Force);
-        }
     }
 
     /// <summary> Calculates the points above and below the platform. </summary>
     private void CalculatePoints()
     {
-        LayerMask mask = LayerMask.GetMask("Map", "Platform");
-        RaycastHit2D hit;
-        Vector2 origin;
+        LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
+        Vector2 origin = transform.position;
+        Vector2 up = transform.up.normalized;
+        Vector2 size = new Vector2(5, 0.5f) * new Vector2(.8f, 1); // TODO : Remplacer quand on a aura la logique d'expension des platformes
+        float angle = transform.rotation.eulerAngles.z;
 
-        for (int i = 0; i < _abovePoints.Length; i++)
-        {
-            origin = Vector2.Lerp(_leftPoint.position, _rightPoint.position, (float)i / (float)(_raycastPrecision - 1));
-            hit = Physics2D.Raycast(origin, transform.up, _raycastLengthLimit, mask);
-            _abovePoints[i] = hit ? hit.point : origin + (Vector2)transform.up * _raycastLengthLimit;
-        }
+        // Above
+        RaycastHit2D hit = Physics2D.BoxCast(origin, size, angle, up, _tubeLengthLimit, mask);
+        Vector2 abovePoint, belowPoint;
+        if (hit)
+            abovePoint = hit.point;
+        else
+            abovePoint = origin + _tubeLengthLimit * up;
 
-        for (int i = 0; i < _belowPoints.Length; i++)
-        {
-            origin = Vector2.Lerp(_rightPoint.position, _leftPoint.position, (float)i / (float)(_raycastPrecision - 1));
-            hit = Physics2D.Raycast(origin, -transform.up, _raycastLengthLimit, mask);
-            _belowPoints[i] = hit ? hit.point : origin - (Vector2)transform.up * _raycastLengthLimit;
-        }
-    }
+        // Below
+        hit = Physics2D.BoxCast(origin, size, angle, -up, _tubeLengthLimit, mask);
+        if (hit)
+            belowPoint = hit.point;
+        else
+            belowPoint = origin - _tubeLengthLimit * up;
 
-    private void FirstDrawShape()
-    {
-        _tubeShapeController.spline.Clear();
-        _tubeCollider.points = new Vector2[_abovePoints.Length + _belowPoints.Length];
-        for (int i = 0; i < _abovePoints.Length; i++)
-        {
-            _tubeShapeController.spline.InsertPointAt(i, transform.InverseTransformPoint(_abovePoints[i]));
-            _tubeCollider.points[i] = transform.InverseTransformPoint(_abovePoints[i]);
-        }
+        // Calculer la distance point <-> platforme
+        _aboveDistance = Vector2.Dot(abovePoint - origin, up);
+        _belowDistance = Vector2.Dot(belowPoint - origin, up);
 
-        for (int i = 0; i < _belowPoints.Length; i++)
-        {
-            _tubeShapeController.spline.InsertPointAt(i + _abovePoints.Length, transform.InverseTransformPoint(_belowPoints[i]));
-            _tubeCollider.points[i + _abovePoints.Length] = transform.InverseTransformPoint(_belowPoints[i]);
-        }
-    }
+        // Changer la taille et l'offset du collider pour le recentrer
+        _tubeCollider.size = new Vector2(5, _aboveDistance - _belowDistance); // TODO : Remplacer quand on a aura la logique d'expension des platformes
 
-    private void DrawShape()
-    {
-        for (int i = 0; i < _abovePoints.Length; i++)
-        {
-            _tubeShapeController.spline.SetPosition(i, transform.InverseTransformPoint(_abovePoints[i]));
-        }
-
-        for (int i = 0; i < _belowPoints.Length; i++)
-        {
-            _tubeShapeController.spline.SetPosition(i + _abovePoints.Length, transform.InverseTransformPoint(_belowPoints[i]));
-        }
-    }
-
-    private void LateUpdate()
-    {
-        CalculatePoints();
-        DrawShape();
+        // Recentrer l'offset du collider
+        abovePoint = (Vector2)transform.position + _aboveDistance * up; 
+        belowPoint = (Vector2)transform.position + _belowDistance * up;
+        Vector2 middle = Vector2.Lerp(belowPoint, abovePoint, .5f);
+        _tubeCollider.offset = new Vector2(0, transform.InverseTransformPoint(middle).y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -110,21 +87,57 @@ public class PlatformGravity : Platform
         if (_isGhost)
             return;
 
-        if(collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
         {
-            _bodies.Add(urp);
+            if (_slurpInBodies.Contains(urb))
+                return;
+
+            urb.DisableControls(); // Au cas ou le urb est le joueur.
+            StartCoroutine(LerpIn(urb));
+            _slurpInBodies.Add(urb);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    /// <summary> Sluuurrrrpppp </summary>
+    private IEnumerator LerpIn(URigidbody2D urb)
     {
-        if (_isGhost)
-            return;
+        Vector2 start = urb.transform.position;
+        Vector2 thisToObject = start - (Vector2)transform.position;
 
-        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urp))
+        float dotProduct = Vector2.Dot(thisToObject, transform.up.normalized); // Ramene le joueur dans le tube si il entre par le dessus ou le dessous
+        if (dotProduct > _aboveDistance)
         {
-            _bodies.Remove(urp);
+            dotProduct = _aboveDistance * .80f;
         }
+        else if (dotProduct < _belowDistance)
+        {
+            dotProduct = _belowDistance * .80f;
+        }
+
+        Vector2 end = transform.position + dotProduct * transform.up.normalized;
+
+#if UNITY_EDITOR
+        CoolDraws.DrawWireSphere(start, 0.5f, Color.red, 10);
+        CoolDraws.DrawWireSphere(end, 0.5f, Color.blue, 10);
+#endif
+
+        urb.RigidBody2D.gravityScale = 0;
+        urb.RigidBody2D.velocity = Vector2.zero;
+
+        float t = 0;
+        while (t < 1)
+        {
+            urb.transform.position = Vector2.LerpUnclamped(start, end, _slurpCurve.Evaluate(t));
+            t += Time.fixedDeltaTime / _slurpDuration;
+            yield return new WaitForFixedUpdate();
+        }
+
+        urb.EnableControls();
+        urb.RigidBody2D.velocity = Vector2.zero;
+        _slurpInBodies.Remove(urb);
+        _gravityMoveBodies.Add(urb);
+
+        yield break;
     }
 
     private void FixedUpdate()
@@ -135,29 +148,86 @@ public class PlatformGravity : Platform
         MoveRigidBodies();
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    /// <summary> Moves the given rigidbody in the direction the platform is facing. </summary>
+    public void MoveRigidBodies()
     {
-        if (!UnityEditor.EditorApplication.isPlaying)
+        if (_gravityMoveBodies.Count <= 0)
             return;
 
-        Vector2 origin;
-
-        Gizmos.color = Color.red;
-        for (int i = 0; i < _abovePoints.Length; i++)
+        for (int i = 0; i < _gravityMoveBodies.Count; i++)
         {
-            origin = Vector2.Lerp(_leftPoint.position, _rightPoint.position, (float)i / (float)(_raycastPrecision - 1));
-            Gizmos.DrawLine(origin, _abovePoints[i]);
-            Gizmos.DrawWireSphere(_abovePoints[i], 0.25f);
-        }
-
-        Gizmos.color = Color.blue;
-        for (int i = 0; i < _belowPoints.Length; i++)
-        {
-            origin = Vector2.Lerp(_rightPoint.position, _leftPoint.position, (float)i / (float)(_raycastPrecision - 1));
-            Gizmos.DrawLine(origin, _belowPoints[i]);
-            Gizmos.DrawWireSphere(_belowPoints[i], 0.25f);
+            Rigidbody2D rb = _gravityMoveBodies[i].RigidBody2D;
+            rb.velocity = _gravitySpeed * transform.up + transform.right * Vector2.Dot(rb.velocity, transform.right);
         }
     }
-#endif
+
+    private void LateUpdate()
+    {
+        CalculatePoints();
+        DrawShape();
+    }
+
+    private void DrawShape()
+    {
+        float width = _tubeCollider.size.x;
+        Vector2 pointPosition = Vector2.zero;
+
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    pointPosition = new Vector2(-width * .5f, _belowDistance);
+                    break;
+
+                case 1:
+                    pointPosition = new Vector2(-width * .5f, _aboveDistance);
+                    break;
+
+                case 2:
+                    pointPosition = new Vector2(width * .5f, _aboveDistance);
+                    break;
+
+                case 3:
+                    pointPosition = new Vector2(width * .5f, _belowDistance);
+                    break;
+
+                default: break;
+            }
+
+            _tubeShapeController.spline.SetPosition(i, pointPosition);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (_isGhost)
+            return;
+
+        if (collision.TryGetComponent<URigidbody2D>(out URigidbody2D urb))
+        {
+            if (_slurpInBodies.Contains(urb))
+                return;
+
+            _gravityMoveBodies.Remove(urb);
+            urb.ResetGravityScale();
+            urb.EnableControls();
+        }
+    }
+
+    private void OnDestroy() // L'erreur quand on sort du play mode c'est NORMAL
+    {
+        foreach(var b in _gravityMoveBodies)
+        {
+            b.ResetGravityScale();
+        }
+        _gravityMoveBodies.Clear();
+
+        foreach (var b in _slurpInBodies)
+        {
+            b.EnableControls();
+            b.ResetGravityScale();
+        }
+        _slurpInBodies.Clear();
+    }
 }
