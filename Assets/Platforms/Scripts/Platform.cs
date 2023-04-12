@@ -1,4 +1,6 @@
 using System.Collections;
+using UnityEditor;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -24,6 +26,8 @@ public class Platform : MonoBehaviour, IGhostable
     private PlatformGFX _platformGFX;
     [SerializeField, Tooltip("Ordered width steps for beyond Middles.")]
     private float[] _stepsMinWidth;
+    [SerializeField, Range(0, 1)]
+    private float _colliderWidthOffset;
     [SerializeField]
     private PlatformSide[] _platformSidesLimits = new PlatformSide[2];
     [SerializeField]
@@ -160,10 +164,20 @@ public class Platform : MonoBehaviour, IGhostable
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
+        if (EditorApplication.isPlaying)
+            return;
+
         if(_minWidth < 0) _minWidth = 0;
         if(_maxWidth <= _minWidth) _maxWidth = _minWidth;
+        if(_colliderWidthOffset < 0) _colliderWidthOffset = 0;
 
         Vector3 upOffset = drawWidthVerticalOffset * transform.up;
+
+        // Collider width offset
+        Gizmos.color = new Color32(255, 127, 0, 255); // Orange
+        Gizmos.DrawLine(transform.position - .5f * (_maxWidth + _colliderWidthOffset) * transform.right + upOffset, transform.position + .5f * (_maxWidth + _colliderWidthOffset) * transform.right + upOffset);
+        Gizmos.DrawCube(transform.position - .5f * (_maxWidth + _colliderWidthOffset) * transform.right + upOffset, new(0.01f, .1f));
+        Gizmos.DrawCube(transform.position + .5f * (_maxWidth + _colliderWidthOffset) * transform.right + upOffset, new(0.01f, .1f));
 
         // Max width
         Gizmos.color = Color.green;
@@ -252,6 +266,13 @@ public class Platform : MonoBehaviour, IGhostable
 
                 side++;
             }
+
+            // Taille du collider
+            if(!_coll)
+                _coll = GetComponent<BoxCollider2D>();
+            _width = _leftWidth + _rightWidth + _colliderWidthOffset * (0.5f * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0) + 0.5f * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0));
+            _coll.size = new(_width, _coll.size.y);
+            _coll.offset = new(((_rightWidth + _colliderWidthOffset * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0)) - (_leftWidth + _colliderWidthOffset * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0))) * .5f, 0);
         }
     }
 #endif

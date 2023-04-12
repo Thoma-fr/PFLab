@@ -86,6 +86,7 @@ MonoBehaviour:
   _stepsMinWidth:
   - 1.6
   - 1.9
+  _colliderWidthOffset: 0.3
   _platformSidesLimits:
   - name: Left
     regions:
