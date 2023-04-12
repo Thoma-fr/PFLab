@@ -21,7 +21,7 @@ public class PFUIContainer : MonoBehaviour
         {
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(go.transform.DOScale(new Vector3(0,0,0),0));
-            mySequence.Append(go.transform.DOScale(new Vector3(0.65f, 0.65f, 0.65f), 0.05f).SetEase(Ease.OutBounce));
+            mySequence.Append(go.transform.DOScale(new Vector3(1, 1, 1), 0.05f).SetEase(Ease.OutBounce));
             yield return new WaitForSeconds(0.01f);
         }
     }
