@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEditor;
-using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -161,6 +160,75 @@ public class Platform : MonoBehaviour, IGhostable
         return ret;
     }
 
+    private void DeactivateAllRegions()
+    {
+        for(int i = 0; i < 2; i++)
+        {
+            foreach (PlatformSide side in (i == 0 ? _platformSidesLimits : _platformSidesExtenders))
+            {
+                foreach (Transform t in side.regions)
+                {
+                    t.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    private void ActivateRelevantRegions()
+    {
+        Transform[,] regionsToSpawn = GetRegionsToSpawn();
+        if (regionsToSpawn != null)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < _stepsMinWidth.Length; j++)
+                {
+                    regionsToSpawn[i, j]?.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
+    private void ActivateExtenders()
+    {
+        int side = 0;
+        foreach (PlatformSide platformSide in _platformSidesLimits)
+        {
+            for (int i = platformSide.regions.Length - 1; i >= 1; i--)
+            {
+                // Regle la position des extremites.
+                if (i == platformSide.regions.Length - 1 && platformSide.regions[i])
+                    platformSide.regions[i].localPosition = (side == 0 ? -_leftWidth : _rightWidth) * Vector2.right;
+
+                SpriteShapeController ssc = _platformSidesExtenders[side].regions[i - 1]?.GetComponent<SpriteShapeController>();
+                ssc.spline.Clear();
+                ssc.spline.InsertPointAt(0, side == 0 ? platformSide.regions[i].localPosition : platformSide.regions[i - 1].localPosition);
+                ssc.spline.InsertPointAt(1, side == 0 ? platformSide.regions[i - 1].localPosition : platformSide.regions[i].localPosition);
+                ssc.gameObject.SetActive(platformSide.regions[i].gameObject.activeSelf);
+            }
+
+            side++;
+        }
+    }
+
+    private void UpdateCollider()
+    {
+        if (!_coll)
+            _coll = GetComponent<BoxCollider2D>();
+
+        if (_leftWidth < _stepsMinWidth[0] * .5f && _rightWidth < _stepsMinWidth[0] * .5f)
+        {
+            _coll.size = new(_minWidth, _coll.size.y);
+            _coll.offset = Vector2.zero;
+        }
+        else
+        {
+            _width = _leftWidth + _rightWidth + _colliderWidthOffset * (0.5f * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0) + 0.5f * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0));
+            _coll.size = new(_width, _coll.size.y);
+            _coll.offset = new(((_rightWidth + _colliderWidthOffset * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0)) - (_leftWidth + _colliderWidthOffset * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0))) * .5f, 0);
+        }
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
@@ -213,66 +281,22 @@ public class Platform : MonoBehaviour, IGhostable
         Gizmos.DrawCube(transform.position - .5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
         Gizmos.DrawCube(transform.position + .5f * _minWidth * transform.right + upOffset, new(0.01f, .1f));
 
+        if (_leftWidth > _maxWidth * .5f || _leftWidth < 0) _leftWidth = Mathf.Clamp(_leftWidth, 0, _maxWidth * .5f);
+        if (_rightWidth > _maxWidth * .5f || _rightWidth < 0) _rightWidth = Mathf.Clamp(_rightWidth, 0, _maxWidth * .5f);
+
         // A SUPPRIMER SINON OUCH OUILLE LES PERFS HOLALA
         {
-            if (_leftWidth > _maxWidth * .5f || _leftWidth < 0) _leftWidth = Mathf.Clamp(_leftWidth, 0, _maxWidth * .5f);
-            if (_rightWidth > _maxWidth * .5f || _rightWidth < 0) _rightWidth = Mathf.Clamp(_rightWidth, 0, _maxWidth * .5f);
-
             // Desactive tout
-            for(int i = 0; i < 2; i++)
-            {
-                foreach (Transform t in _platformSidesLimits[i].regions)
-                {
-                    t.gameObject.SetActive(false);
-                }
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                foreach (Transform t in _platformSidesExtenders[i].regions)
-                {
-                    t.gameObject.SetActive(false);
-                }
-            }
+            DeactivateAllRegions();
 
             // Reactive les bons
-            Transform[,] regionsToSpawn = GetRegionsToSpawn();
-            if (regionsToSpawn != null)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < _stepsMinWidth.Length; j++)
-                    {
-                        regionsToSpawn[i, j]?.gameObject.SetActive(true);
-                    }
-                }
-            }
+            ActivateRelevantRegions();
 
             // Active et regle la taille des Extenders
-            int side = 0;
-            foreach(PlatformSide platformSide in _platformSidesLimits)
-            {
-                for(int i = platformSide.regions.Length - 1; i >= 1; i--)
-                {
-                    if(i == platformSide.regions.Length - 1 && platformSide.regions[i])
-                        platformSide.regions[i].localPosition = (side == 0 ? - _leftWidth : _rightWidth) * Vector2.right;
-
-                    SpriteShapeController ssc = _platformSidesExtenders[side].regions[i - 1]?.GetComponent<SpriteShapeController>();
-                    ssc.spline.Clear();
-                    ssc.spline.InsertPointAt(0, side == 0 ? platformSide.regions[i].localPosition : platformSide.regions[i - 1].localPosition);
-                    ssc.spline.InsertPointAt(1, side == 0 ? platformSide.regions[i - 1].localPosition : platformSide.regions[i].localPosition);
-                    ssc.gameObject.SetActive(platformSide.regions[i].gameObject.activeSelf);
-                }
-
-                side++;
-            }
+            ActivateExtenders();
 
             // Taille du collider
-            if(!_coll)
-                _coll = GetComponent<BoxCollider2D>();
-            _width = _leftWidth + _rightWidth + _colliderWidthOffset * (0.5f * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0) + 0.5f * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0));
-            _coll.size = new(_width, _coll.size.y);
-            _coll.offset = new(((_rightWidth + _colliderWidthOffset * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0)) - (_leftWidth + _colliderWidthOffset * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0))) * .5f, 0);
+            UpdateCollider();
         }
     }
 #endif
