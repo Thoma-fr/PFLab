@@ -79,6 +79,7 @@ Material:
     - _Cull: 2
     - _DstBlend: 0
     - _EnableExternalAlpha: 0
+    - _Fuzz: 0.18
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -90,8 +91,8 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color_1: {r: 0.2917707, g: 0.03433981, b: 0.6795426, a: 1}
+    - _Color_1: {r: 0.23839766, g: 0.07618539, b: 0.45641106, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 123.64331, g: 11.240301, b: 314.72842, a: 1}
+    - _GlowColor: {r: 35.963524, g: 3.3124297, b: 90.38201, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
