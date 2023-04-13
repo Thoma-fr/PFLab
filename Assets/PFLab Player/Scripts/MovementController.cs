@@ -6,6 +6,7 @@ public class MovementController : MonoBehaviour
 {
     private URigidbody2D _urb;
     private InputController _inputs;
+    private CapsuleCollider2D _collider;
 
     [Header("Movement")]
     [SerializeField]
@@ -47,6 +48,7 @@ public class MovementController : MonoBehaviour
     {
         _urb = GetComponent<URigidbody2D>();
         _inputs = GetComponent<InputController>();
+        _collider = GetComponent<CapsuleCollider2D>();
     }
 
     private void Update()
@@ -83,13 +85,13 @@ public class MovementController : MonoBehaviour
 
     private bool GroundCheck(LayerMask layerMask)
     {
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, .5f, Vector2.down, _groundCheckDistance, layerMask);
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, _collider.size.x * .5f, Vector2.down, _groundCheckDistance, layerMask);
 
 #if UNITY_EDITOR
         if (hit)
-            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.green, Time.fixedDeltaTime);
+            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, _collider.size.x * .5f, Color.green, Time.fixedDeltaTime);
         else
-            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f, Color.red, Time.fixedDeltaTime);
+            CoolDebugs.CoolDraws.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, _collider.size.x * .5f, Color.red, Time.fixedDeltaTime);
 #endif
 
         return hit;
@@ -97,7 +99,7 @@ public class MovementController : MonoBehaviour
 
     private bool HeadCheck()
     {
-        return Physics2D.CircleCast(transform.position, .5f, Vector2.up, _headCheckDistance);
+        return Physics2D.CircleCast(transform.position, _collider.size.x * .5f, Vector2.up, _headCheckDistance);
     }
 
     /// <summary> Limite la vitesse a maxSpeed </summary>
@@ -181,7 +183,11 @@ public class MovementController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if(_maxJumpDuration < _minJumpDuration)
+
+        if(_collider == null)
+            _collider = GetComponent<CapsuleCollider2D>();
+
+        if (_maxJumpDuration < _minJumpDuration)
             _maxJumpDuration = _minJumpDuration;
 
         GUIStyle labels = new();
@@ -191,11 +197,11 @@ public class MovementController : MonoBehaviour
         labels.fontSize = 20;
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, .5f);
+        Gizmos.DrawWireSphere((Vector2)transform.position + _groundCheckDistance * Vector2.down, _collider.size.x * .5f);
         Handles.Label((Vector2)transform.position + _groundCheckDistance * Vector2.down, "Ground", labels);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere((Vector2)transform.position + _headCheckDistance * Vector2.up, .5f);
+        Gizmos.DrawWireSphere((Vector2)transform.position + _headCheckDistance * Vector2.up, _collider.size.x * .5f);
         Handles.Label((Vector2)transform.position + _headCheckDistance * Vector2.up, "Head", labels);
     }
 #endif

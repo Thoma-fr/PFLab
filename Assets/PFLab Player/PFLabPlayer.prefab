@@ -196,7 +196,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 315687361, guid: 70e83a647b8549a4b818950c27119a88, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -220,8 +220,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0, y: -0.03}
+  m_Size: {x: 0.3, y: 0.95}
   m_Direction: 0
 --- !u!50 &7809915030991529938
 Rigidbody2D:
@@ -375,38 +375,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547bc24e82dcd574b957512b73144caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 15
+  _maxSpeed: 5
   _minSpeed: 1
-  _accelerationStrength: 50
-  _airAccelerationFactor: 0.4
-  _deccelerationStrength: 50
-  _groundCheckDistance: 0.52
-  _headCheckDistance: 0.52
+  _accelerationStrength: 10
+  _airAccelerationFactor: 0.6
+  _deccelerationStrength: 10
+  _groundCheckDistance: 0.37
+  _headCheckDistance: 0.31
   _jumpVelocityCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -2.2278748
-      outSlope: -2.2278748
+      inSlope: -1.243018
+      outSlope: -1.243018
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.10071942
+      outWeight: 0.08958333
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.019408053
+      outSlope: -0.019408053
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.24820143
+      inWeight: 0.22500002
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _jumpStrength: 30
+  _jumpStrength: 10
   _minJumpDuration: 0.2
   _maxJumpDuration: 0.6
   _jumpDurationMultiplier: 2
