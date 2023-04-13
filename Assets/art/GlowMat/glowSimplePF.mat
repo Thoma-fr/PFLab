@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: glow
+  m_Name: glowSimplePF
   m_Shader: {fileID: -6465566751694194690, guid: dbd3fcbbd4c459346b4da444ed30a476, type: 3}
   m_ValidKeywords:
   - _ALPHATEST_ON
