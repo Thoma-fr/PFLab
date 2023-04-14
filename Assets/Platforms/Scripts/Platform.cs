@@ -202,8 +202,8 @@ public class Platform : MonoBehaviour, IGhostable
 
                 SpriteShapeController ssc = _platformSidesExtenders[side].regions[i - 1]?.GetComponent<SpriteShapeController>();
                 ssc.spline.Clear();
-                ssc.spline.InsertPointAt(0, side == 0 ? platformSide.regions[i].localPosition : platformSide.regions[i - 1].localPosition);
-                ssc.spline.InsertPointAt(1, side == 0 ? platformSide.regions[i - 1].localPosition : platformSide.regions[i].localPosition);
+                ssc.spline.InsertPointAt(0, side == 0 ? new Vector2(-_leftWidth - ssc.transform.localPosition.x, 0) : Vector2.zero);
+                ssc.spline.InsertPointAt(1, side == 0 ? Vector2.zero : new Vector2(_rightWidth - ssc.transform.localPosition.x, 0));
                 ssc.gameObject.SetActive(platformSide.regions[i].gameObject.activeSelf);
             }
 
