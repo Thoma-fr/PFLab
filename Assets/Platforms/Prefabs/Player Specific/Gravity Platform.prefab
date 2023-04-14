@@ -695,11 +695,9 @@ MonoBehaviour:
   - name: Right
     regions:
     - {fileID: 8077144691853020885}
-  _leftWidth: 1.5
-  _rightWidth: 1.5
   _tubeShapeController: {fileID: 2339615719695072953}
   _gravitySpeed: 6
-  _tubeLengthLimit: 10
+  _tubeLengthLimit: 8
   _slurpDuration: 1
   _slurpCurve:
     serializedVersion: 2

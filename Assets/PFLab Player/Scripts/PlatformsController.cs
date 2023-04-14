@@ -1,5 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum PLATFORM
 {
@@ -37,6 +39,9 @@ public class PlatformsController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
         FollowMouse();
 
         if (RotatingPlatform && _newPlatform)
@@ -119,5 +124,14 @@ public class PlatformsController : MonoBehaviour
             DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.2f);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        Collider2D coll = Physics2D.OverlapCircle(_mousePosition, 0, LayerMask.GetMask("Platform", "Bouncing Platform"));
+        if (coll)
+            gameManager.hoveredPlatform = coll.gameObject;
+        else
+            gameManager.hoveredPlatform = null;
     }
 }
