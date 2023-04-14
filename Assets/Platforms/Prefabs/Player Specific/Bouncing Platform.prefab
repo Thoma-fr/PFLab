@@ -584,9 +584,7 @@ MonoBehaviour:
   - name: Right
     regions:
     - {fileID: 8420781123157351446}
-  _leftWidth: 1.5
-  _rightWidth: 1.5
-  _minBounceForce: 20
+  _minBounceForce: 14
   _maxBounceForce: 1000
   _bounceForceScale: 1.05
   _bounceAnimationDuration: 0

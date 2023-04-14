@@ -41,7 +41,7 @@ public class MovementController : MonoBehaviour
     private Coroutine _jumpCoroutine;
     public bool HoldingJump { get; set; }
 
-
+    private Animator _Animator;
     //==========================================================================
 
     private void Awake()
@@ -49,6 +49,7 @@ public class MovementController : MonoBehaviour
         _urb = GetComponent<URigidbody2D>();
         _inputs = GetComponent<InputController>();
         _collider = GetComponent<CapsuleCollider2D>();
+        _Animator= GetComponent<Animator>();
     }
 
     private void Update()
