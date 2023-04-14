@@ -15,6 +15,7 @@ public enum PLATFORM
 public class PlatformsController : MonoBehaviour
 {
     [Header("Platforms")]
+    public GameManager gameManager;
     public PLATFORM choosenPlatform;
     public GameObject choosenPlatformGameobject;
     public GameObject[] platformPrefabs;
@@ -72,15 +73,25 @@ public class PlatformsController : MonoBehaviour
 
         choosenPlatformGameobject.SetActive(true);
 
-        if (!_newPlatform.GetComponent<Platform>().CanBePlaced)
+        Platform platformScript = _newPlatform.GetComponent<Platform>();
+
+        if (!platformScript.CanBePlaced)
         {
             Destroy(_newPlatform);
             return;
         }
 
-        _newPlatform.GetComponent<Platform>().RenderPhysical();
+        platformScript.pfType = choosenPlatform;
+        platformScript.RenderPhysical();
+        platformScript.gameManager = gameManager;
+        gameManager.AddPlatformToTracker(_newPlatform, (int)choosenPlatform);
         DOTween.KillAll();
         DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
+    }
+
+    public void DeletePlatform()
+    {
+        gameManager.DeleteHoveredPlatform();
     }
 
     public void FollowMouse()

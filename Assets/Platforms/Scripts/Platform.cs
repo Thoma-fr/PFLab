@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.U2D;
 
-public class Platform : MonoBehaviour, IGhostable
+public class Platform : MonoBehaviour, IGhostable, IPointerEnterHandler, IPointerExitHandler
 {
 #if UNITY_EDITOR
     [Header("Debug settings")]
@@ -39,6 +40,8 @@ public class Platform : MonoBehaviour, IGhostable
     public bool IsGhost => _isGhost;
     protected bool _canBePlaced = false;
     public bool CanBePlaced => _canBePlaced;
+    public PLATFORM pfType { get; set; }
+    public GameManager gameManager { get; set; }
 
     //=========================================================================================================
 
@@ -322,6 +325,18 @@ public class Platform : MonoBehaviour, IGhostable
 
         if (_leftWidth > _maxWidth * .5f || _leftWidth < 0) _leftWidth = Mathf.Clamp(_leftWidth, 0, _maxWidth * .5f);
         if (_rightWidth > _maxWidth * .5f || _rightWidth < 0) _rightWidth = Mathf.Clamp(_rightWidth, 0, _maxWidth * .5f);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if(gameManager)
+            gameManager.hoveredPlatform = this.gameObject;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (gameManager && gameManager.hoveredPlatform == this.gameObject)
+            gameManager.hoveredPlatform = null;
     }
 #endif
 }

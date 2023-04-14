@@ -333,6 +333,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d3e38994-2206-4647-9394-cbe0336e0062
     m_ActionName: Gameplay/Spawn Platform[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7809915030991529935}
+        m_TargetAssemblyTypeName: PlatformsController, Assembly-CSharp
+        m_MethodName: DeletePlatform
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 336815e3-effc-482a-9acb-0964e26ff869
+    m_ActionName: Gameplay/Delete Platform[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -422,6 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5aa1fda3f181cf45a9b635c04ad45e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   choosenPlatform: 0
   choosenPlatformGameobject: {fileID: 0}
   platformPrefabs:
