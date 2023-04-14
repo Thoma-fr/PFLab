@@ -40,17 +40,20 @@ public class PlatformGravity : Platform
             _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
             _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
         }
+    }
 
+    private void Start()
+    {
         CalculatePoints();
     }
 
     /// <summary> Calculates the points above and below the platform. </summary>
     private void CalculatePoints()
     {
-        LayerMask mask = LayerMask.GetMask("Map", "Platform", "Bouncing Platform", "Speed Platform");
+        LayerMask mask = LayerMask.GetMask("Map");
         Vector2 origin = transform.position;
         Vector2 up = transform.up.normalized;
-        Vector2 size = new Vector2(5, 0.5f) * new Vector2(.8f, 1); // TODO : Remplacer quand on a aura la logique d'expension des platformes
+        Vector2 size = new Vector2((_coll.size.x - 0.625f) *.8f, .3f);
         float angle = transform.rotation.eulerAngles.z;
 
         // Above
@@ -73,13 +76,13 @@ public class PlatformGravity : Platform
         _belowDistance = Vector2.Dot(belowPoint - origin, up);
 
         // Changer la taille et l'offset du collider pour le recentrer
-        _tubeCollider.size = new Vector2(5, _aboveDistance - _belowDistance); // TODO : Remplacer quand on a aura la logique d'expension des platformes
+        _tubeCollider.size = new Vector2(_coll.size.x, _aboveDistance - _belowDistance);
 
         // Recentrer l'offset du collider
         abovePoint = (Vector2)transform.position + _aboveDistance * up; 
         belowPoint = (Vector2)transform.position + _belowDistance * up;
         Vector2 middle = Vector2.Lerp(belowPoint, abovePoint, .5f);
-        _tubeCollider.offset = new Vector2(0, transform.InverseTransformPoint(middle).y);
+        _tubeCollider.offset = new Vector2(_coll.offset.x, transform.InverseTransformPoint(middle).y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -163,13 +166,15 @@ public class PlatformGravity : Platform
 
     private void LateUpdate()
     {
+        _tubeShapeController.gameObject.SetActive(_canBePlaced);
         CalculatePoints();
         DrawShape();
     }
 
     private void DrawShape()
     {
-        float width = _tubeCollider.size.x;
+        float width = _coll.size.x - 0.625f;
+        float offset = _tubeCollider.offset.x;
         Vector2 pointPosition = Vector2.zero;
 
         for (int i = 0; i < 4; i++)
@@ -177,19 +182,19 @@ public class PlatformGravity : Platform
             switch (i)
             {
                 case 0:
-                    pointPosition = new Vector2(-width * .5f, _belowDistance);
+                    pointPosition = new Vector2(-width * .5f + offset, _belowDistance);
                     break;
 
                 case 1:
-                    pointPosition = new Vector2(-width * .5f, _aboveDistance);
+                    pointPosition = new Vector2(-width * .5f + offset, _aboveDistance);
                     break;
 
                 case 2:
-                    pointPosition = new Vector2(width * .5f, _aboveDistance);
+                    pointPosition = new Vector2(width * .5f + offset, _aboveDistance);
                     break;
 
                 case 3:
-                    pointPosition = new Vector2(width * .5f, _belowDistance);
+                    pointPosition = new Vector2(width * .5f + offset, _belowDistance);
                     break;
 
                 default: break;

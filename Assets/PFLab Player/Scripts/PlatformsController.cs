@@ -70,8 +70,15 @@ public class PlatformsController : MonoBehaviour
     {
         if (_newPlatform == null) return;
 
-        _newPlatform.GetComponent<Platform>().RenderPhysical();
         choosenPlatformGameobject.SetActive(true);
+
+        if (!_newPlatform.GetComponent<Platform>().CanBePlaced)
+        {
+            Destroy(_newPlatform);
+            return;
+        }
+
+        _newPlatform.GetComponent<Platform>().RenderPhysical();
         DOTween.KillAll();
         DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
     }

@@ -34,8 +34,10 @@ public class PlatformMirror : Platform
         }
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
+
         if (Time.timeScale < 1f)
         {
             if (!_isHitByLaser && _laser)

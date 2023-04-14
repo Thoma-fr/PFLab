@@ -377,9 +377,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxSpeed: 5
   _minSpeed: 1
-  _accelerationStrength: 10
+  _accelerationStrength: 20
   _airAccelerationFactor: 0.6
-  _deccelerationStrength: 10
+  _deccelerationStrength: 20
   _groundCheckDistance: 0.37
   _headCheckDistance: 0.31
   _jumpVelocityCurve:

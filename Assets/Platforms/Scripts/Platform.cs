@@ -32,31 +32,66 @@ public class Platform : MonoBehaviour, IGhostable
     [SerializeField]
     private PlatformSide[] _platformSidesExtenders = new PlatformSide[2];
 
-    private BoxCollider2D _coll;
-    private float _height;
-    public float _leftWidth, _rightWidth;
+    private float _leftWidth, _rightWidth;
+    protected BoxCollider2D _coll;
     protected float _width; // Width of the platform, varies in relation to the available space. Capped at _minSize and _maxSize.
     protected bool _isGhost; // Is the current platform in ghost mode or not ?
     public bool IsGhost => _isGhost;
+    protected bool _canBePlaced = false;
+    public bool CanBePlaced => _canBePlaced;
 
     //=========================================================================================================
 
     private void Awake()
     {
-        if (_platformSidesLimits[0].regions.Length != _stepsMinWidth.Length || _platformSidesLimits[1].regions.Length != _stepsMinWidth.Length)
-            throw new System.Exception("_platformSidesLimits does not have the same amount of steps as _stepsMinWidth.");
+        if (!CompareTag("LaserPlatform"))
+        {
+            if (_platformSidesLimits[0].regions.Length != _stepsMinWidth.Length || _platformSidesLimits[1].regions.Length != _stepsMinWidth.Length)
+                throw new System.Exception("_platformSidesLimits does not have the same amount of steps as _stepsMinWidth.");
 
-        if (_platformSidesLimits[0].regions.Length != _platformSidesExtenders[0].regions.Length + 1 || _platformSidesLimits[1].regions.Length != _platformSidesExtenders[1].regions.Length + 1)
-            throw new System.Exception("_platformSidesLimits[X].regions.Length != _platformSidesExtenders[X].regions.Length + 1");
+            if (_platformSidesLimits[0].regions.Length != _platformSidesExtenders[0].regions.Length + 1 || _platformSidesLimits[1].regions.Length != _platformSidesExtenders[1].regions.Length + 1)
+                throw new System.Exception("_platformSidesLimits[X].regions.Length != _platformSidesExtenders[X].regions.Length + 1");
+        }
 
         TryGetComponent(out _coll);
-        if (_coll)
-            _height = _coll.size.y;
+
+        _leftWidth = _maxWidth * .5f;
+        _rightWidth = _maxWidth * .5f;
     }
+
+    protected void Update()
+    {
+        if (!_isGhost)
+            return;
+
+        _width = _leftWidth + _rightWidth;
+
+        if (!IsThereEnoughSpace())
+        {
+            _platformGFX.MakeRed();
+            DeactivateAllRegions();
+            _canBePlaced = false;
+            return;
+        }
+        else
+        {
+            _platformGFX.MakeGhost();
+            _canBePlaced = true;
+        }
+
+        if (CompareTag("LaserPlatform"))
+            return;
+        {
+            DeactivateAllRegions();
+            ActivateRelevantRegions();
+            ActivateExtenders();
+            UpdateCollider();
+        }
+    }
+
     public void Ghostify()
     {
         _isGhost = true;
-        DrawGhost();
 
         if(_coll == null)
         {
@@ -87,13 +122,17 @@ public class Platform : MonoBehaviour, IGhostable
     /// <summary> Checks the surrounding area to see if there is enough space to spawn at least a _minSize sized platform. </summary>
     private bool IsThereEnoughSpace()
     {
-        return (_leftWidth >= _minWidth * .5f && _rightWidth >= _minWidth * .5f);
-    }
+        LayerMask mask = ~LayerMask.GetMask("Interface Interactable", "Ghost Mirror Platform");
+        if (Physics2D.OverlapCircle(transform.position, 0.3f, mask))
+            return false;
 
-    /// <summary> Draws a ghostly image of the platform as feedback to see how the platform will be place in the world. </summary>
-    protected void DrawGhost()
-    {
-        // TODO
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, _maxWidth * .5f, mask);
+        _rightWidth = hit ? hit.distance : _maxWidth * .5f;
+
+        hit = Physics2D.Raycast(transform.position, -transform.right, _maxWidth * .5f, mask);
+        _leftWidth = hit ? hit.distance : _maxWidth * .5f;
+
+        return (_leftWidth >= _minWidth * .5f && _rightWidth >= _minWidth * .5f);
     }
 
     /// <summary> Starts the animation of the platform's creation. </summary>
@@ -120,6 +159,20 @@ public class Platform : MonoBehaviour, IGhostable
     {
         // TODO
         yield break;
+    }
+
+    private void DeactivateAllRegions()
+    {
+        for(int i = 0; i < 2; i++)
+        {
+            foreach (PlatformSide side in (i == 0 ? _platformSidesLimits : _platformSidesExtenders))
+            {
+                foreach (Transform t in side.regions)
+                {
+                    t.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     /// <summary> Get regions that should be visible based on left and right width; </summary>
@@ -158,20 +211,6 @@ public class Platform : MonoBehaviour, IGhostable
         }
 
         return ret;
-    }
-
-    private void DeactivateAllRegions()
-    {
-        for(int i = 0; i < 2; i++)
-        {
-            foreach (PlatformSide side in (i == 0 ? _platformSidesLimits : _platformSidesExtenders))
-            {
-                foreach (Transform t in side.regions)
-                {
-                    t.gameObject.SetActive(false);
-                }
-            }
-        }
     }
 
     private void ActivateRelevantRegions()
@@ -283,21 +322,6 @@ public class Platform : MonoBehaviour, IGhostable
 
         if (_leftWidth > _maxWidth * .5f || _leftWidth < 0) _leftWidth = Mathf.Clamp(_leftWidth, 0, _maxWidth * .5f);
         if (_rightWidth > _maxWidth * .5f || _rightWidth < 0) _rightWidth = Mathf.Clamp(_rightWidth, 0, _maxWidth * .5f);
-
-        // A SUPPRIMER SINON OUCH OUILLE LES PERFS HOLALA
-        {
-            // Desactive tout
-            DeactivateAllRegions();
-
-            // Reactive les bons
-            ActivateRelevantRegions();
-
-            // Active et regle la taille des Extenders
-            ActivateExtenders();
-
-            // Taille du collider
-            UpdateCollider();
-        }
     }
 #endif
 }

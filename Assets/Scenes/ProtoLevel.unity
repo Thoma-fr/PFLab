@@ -5139,6 +5139,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8196629739345501118, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.16399997
+      objectReference: {fileID: 0}
     - target: {fileID: 8196629741384218544, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
       propertyPath: m_Name
       value: All In One Player
@@ -6948,7 +6952,7 @@ GameObject:
   - component: {fileID: 1828087882}
   - component: {fileID: 1828087881}
   - component: {fileID: 1828087883}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

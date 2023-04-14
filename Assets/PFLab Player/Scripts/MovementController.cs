@@ -99,7 +99,8 @@ public class MovementController : MonoBehaviour
 
     private bool HeadCheck()
     {
-        return Physics2D.CircleCast(transform.position, _collider.size.x * .5f, Vector2.up, _headCheckDistance);
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, _collider.size.x * .5f, Vector2.up, _headCheckDistance);
+        return (hit && !hit.collider.usedByEffector);
     }
 
     /// <summary> Limite la vitesse a maxSpeed </summary>
