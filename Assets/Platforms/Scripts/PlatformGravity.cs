@@ -11,7 +11,7 @@ public class PlatformGravity : Platform
     private SpriteShapeController _tubeShapeController;
     [SerializeField, Tooltip("How fast is the rigidBody traveling through the tube.")]
     private float _gravitySpeed;
-    [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(10, 500)]
+    [SerializeField, Tooltip("Max distance of the grqvity tube."), Range(5, 10)]
     private float _tubeLengthLimit;
     [SerializeField, Tooltip("The time it take for the object to reach the center of the tube."), Range(0.01f, 1f)]
     private float _slurpDuration;

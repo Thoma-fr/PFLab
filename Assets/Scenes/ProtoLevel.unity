@@ -5741,7 +5741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e43fcf6198928a479824ec8cdbd797e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawn: {fileID: 1014746598}
+  respawn: {fileID: 721652770}
 --- !u!61 &1429798878
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7368,7 +7368,7 @@ GameObject:
   - component: {fileID: 1828087882}
   - component: {fileID: 1828087881}
   - component: {fileID: 1828087883}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
