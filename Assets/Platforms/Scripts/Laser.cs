@@ -102,6 +102,15 @@ public class Laser : MonoBehaviour, IGhostable
             if (!_reflectedLaser)
                 return;
 
+            if (hit.normal != (Vector2)hit.collider.transform.up)
+            {
+                if (!_isGhost && !_laserParticlesComponent.GetBool("LaserActive"))
+                {
+                    _laserParticlesComponent.SetBool("LaserActive", true);
+                }
+                return;
+            }
+
             if (!_reflectedLaser.gameObject.activeSelf)
                 _reflectedLaser.gameObject.SetActive(true);
 
@@ -179,7 +188,7 @@ public class Laser : MonoBehaviour, IGhostable
         else
             RenderPhysical();
 
-        RaycastHit2D hit = Physics2D.Raycast(origin, dir, _laserRange, ~LayerMask.GetMask("Ghost Mirror Platform"));
+        RaycastHit2D hit = Physics2D.Raycast(origin, dir, _laserRange, ~LayerMask.GetMask("Ghost Mirror Platform", "Interface Interactable", "Platform Mouse Detection"));
         if (hit)
             Collision(origin, dir, hit);
         else

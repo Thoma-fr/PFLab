@@ -48,7 +48,7 @@ MonoBehaviour:
   _laserRange: 20
   _maxNbOfLasers: 3
   _laserParticles: {fileID: 8926484042661614526, guid: 830ea826748726444b6bcc21d459409f, type: 3}
-  _laserWidth: 0.1
+  _laserWidth: 0.05
   _laserMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   _laserOrderInLayer: -2
   _laserColor: {r: 1, g: 0, b: 0, a: 1}

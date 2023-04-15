@@ -50,6 +50,9 @@ public class PlatformMirror : Platform
 
     public void GhostReflectLaser(Vector2 origin, Vector2 inDirection, Vector2 normal, int maxLasers, int laserNb, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserGhostColor)
     {
+        if (normal != (Vector2)transform.up)
+            return;
+
         _isHitByLaser = true;
 
         // Create the laser

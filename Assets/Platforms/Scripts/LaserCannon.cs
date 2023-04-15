@@ -14,7 +14,7 @@ public class LaserCannon : MonoBehaviour
     private VisualEffectAsset _laserParticles;
 
     [Header("LineRenderer settings")]
-    [SerializeField, Range(0, 1)]
+    [SerializeField, Range(0, .1f)]
     private float _laserWidth;
     [SerializeField]
     private Material _laserMaterial;

@@ -47,6 +47,11 @@ public class PlatformBouncing : Platform
         if (!collision.gameObject.TryGetComponent(out URigidbody2D urb))
             return;
 
+
+        // Ignore if the object comes from the back
+        if (transform.InverseTransformPoint(collision.transform.position).y <= 0)
+            return;
+
         Bounce(urb);
     }
 }
