@@ -1008,7 +1008,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.15
+      m_SerializableObject: 0.2
     m_Space: 2147483647
   m_Property:
     name: A
@@ -1042,7 +1042,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.55
+      m_SerializableObject: 0.2
     m_Space: 2147483647
   m_Property:
     name: B
@@ -1269,7 +1269,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.AnimationCurve, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"frames":[{"time":-0.00009655579924583435,"value":0.5001095533370972,"inTangent":-0.07914463430643082,"outTangent":-0.07914463430643082,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":0.3414759039878845,"value":0.4730759263038635,"inTangent":-0.12979869544506074,"outTangent":-0.12979869544506074,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false},{"time":0.8342210650444031,"value":0.26234200596809389,"inTangent":-1.0625542402267457,"outTangent":-1.0625542402267457,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false},{"time":1.0009125471115113,"value":-0.001196831464767456,"inTangent":-1.5809975862503052,"outTangent":-1.5809975862503052,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
+      m_SerializableObject: '{"frames":[{"time":0.0033290423452854158,"value":0.22934234142303468,"inTangent":-0.3788381516933441,"outTangent":-0.3788381516933441,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":0.5956276655197144,"value":0.004957014694809914,"inTangent":-1.2746844291687012,"outTangent":-1.2746844291687012,"tangentMode":0,"leftTangentMode":0,"rightTangentMode":0,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
     m_Space: 2147483647
   m_Property:
     name: Size
@@ -1546,7 +1546,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":0.0,"y":-8.819999694824219,"z":0.0}}'
+      m_SerializableObject: '{"vector":{"x":0.0,"y":-50.56999969482422,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: Force
@@ -1705,7 +1705,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 596, y: 115}
+  m_UIPosition: {x: 516, y: 152}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -2004,7 +2004,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 496, y: 292}
+  m_UIPosition: {x: 516, y: 290}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -2573,7 +2573,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 16
+      m_SerializableObject: 32
     m_Space: 2147483647
   m_Property:
     name: True
@@ -2693,7 +2693,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614674}
       inputSlot: {fileID: 8926484042661614669}
-    position: {x: 403, y: -70}
+    position: {x: 260, y: -78}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614674
@@ -3128,7 +3128,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614709}
       inputSlot: {fileID: 8926484042661614711}
-    position: {x: 596, y: 529}
+    position: {x: 405, y: 552}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614709
@@ -3181,7 +3181,7 @@ MonoBehaviour:
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
-  m_UIPosition: {x: 719, y: 521}
+  m_UIPosition: {x: 563, y: 514}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
