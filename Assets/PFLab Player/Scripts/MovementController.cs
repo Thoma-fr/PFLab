@@ -88,9 +88,13 @@ public class MovementController : MonoBehaviour
             else if (_jumpCoroutine != null)
                 IncreaseJumpDuration(Time.deltaTime * _jumpDurationMultiplier);
         }
+        VisualThings();
+    }
+    private void VisualThings()
+    {
         flipX();
         _Animator.SetBool("IsGrounded", GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")));
-        _Animator.SetFloat("SpeedX",MathF.Abs(_urb.RigidBody2D.velocity.x));
+        _Animator.SetFloat("SpeedX", MathF.Abs(_urb.RigidBody2D.velocity.x));
         if (GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")) && _urb.RigidBody2D.velocity.x != 0)
         {
             _dustParticle.SetBool("IsWalking", true);
@@ -101,7 +105,6 @@ public class MovementController : MonoBehaviour
             _dustParticle.SetBool("IsWalking", false);
         }
     }
-
     private bool GroundCheck(LayerMask layerMask)
     {
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, _collider.size.x * .5f, Vector2.down, _groundCheckDistance, layerMask);
