@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.VFX;
 public class MovementController : MonoBehaviour
 {
     private URigidbody2D _urb;
@@ -42,6 +44,8 @@ public class MovementController : MonoBehaviour
     public bool HoldingJump { get; set; }
 
     private Animator _Animator;
+    private SpriteRenderer _spriteRenderer;
+    private VisualEffect _dustParticle;
     //==========================================================================
 
     private void Awake()
@@ -50,6 +54,8 @@ public class MovementController : MonoBehaviour
         _inputs = GetComponent<InputController>();
         _collider = GetComponent<CapsuleCollider2D>();
         _Animator= GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _dustParticle = GetComponent<VisualEffect>();
     }
 
     private void Update()
@@ -81,6 +87,18 @@ public class MovementController : MonoBehaviour
                 _jumpCoroutine = StartCoroutine(JumpCoroutine());
             else if (_jumpCoroutine != null)
                 IncreaseJumpDuration(Time.deltaTime * _jumpDurationMultiplier);
+        }
+        flipX();
+        _Animator.SetBool("IsGrounded", GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")));
+        _Animator.SetFloat("SpeedX",MathF.Abs(_urb.RigidBody2D.velocity.x));
+        if (GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")) && _urb.RigidBody2D.velocity.x != 0)
+        {
+            _dustParticle.SetBool("IsWalking", true);
+            _dustParticle.SetFloat("DirVel", _urb.RigidBody2D.velocity.x * -1);
+        }
+        else
+        {
+            _dustParticle.SetBool("IsWalking", false);
         }
     }
 
@@ -139,7 +157,7 @@ public class MovementController : MonoBehaviour
         // Ajustement des valeurs avant d'initier le saut
         _urb.RigidBody2D.gravityScale = 0;
         _currentJumpDuration = _minJumpDuration;
-
+        _Animator.SetTrigger("Jump");
         // Boucle de saut, change la vitesse verticale du joueur au cours du temps
         float t = 0;
         while(t < _currentJumpDuration)
@@ -179,7 +197,13 @@ public class MovementController : MonoBehaviour
         _urb.ResetGravityScale();
         _jumpCoroutine = null;
     }
-
+    private void flipX()
+    {
+        if (_urb.RigidBody2D.velocity.x > 0.3)
+            _spriteRenderer.flipX = false;
+        else
+            _spriteRenderer.flipX = true;
+    }
 #if UNITY_EDITOR
     // =====================================================================
 
