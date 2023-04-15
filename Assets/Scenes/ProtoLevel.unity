@@ -3570,6 +3570,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 474886095472460558, guid: c9ff586bbbbd63a47a116982b1ceb9bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9999296
+      objectReference: {fileID: 0}
+    - target: {fileID: 474886095472460558, guid: c9ff586bbbbd63a47a116982b1ceb9bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.011868038
+      objectReference: {fileID: 0}
+    - target: {fileID: 474886095472460558, guid: c9ff586bbbbd63a47a116982b1ceb9bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -1.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 565073342832190852, guid: c9ff586bbbbd63a47a116982b1ceb9bd, type: 3}
+      propertyPath: _laserRange
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 4882503438195087334, guid: c9ff586bbbbd63a47a116982b1ceb9bd, type: 3}
       propertyPath: m_RootOrder
       value: 39
