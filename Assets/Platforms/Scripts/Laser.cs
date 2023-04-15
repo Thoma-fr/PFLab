@@ -209,4 +209,12 @@ public class Laser : MonoBehaviour, IGhostable
         _lineRenderer.startColor = _laserColor;
         _lineRenderer.endColor = _laserColor;
     }
+
+    private void OnDestroy()
+    {
+        if(_lastLaserableObject != null)
+        {
+            _lastLaserableObject.LaserStop();
+        }
+    }
 }
