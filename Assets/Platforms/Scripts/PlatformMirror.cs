@@ -1,6 +1,5 @@
-using System.Collections;
-using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlatformMirror : Platform
 {
@@ -69,7 +68,7 @@ public class PlatformMirror : Platform
             laserGO.transform.parent = transform;
             _laser = laserGO.AddComponent<Laser>();
 
-            _laser.InitiateLaser(maxLasers - laserNb, laserNb, 0, laserRange, laserWidth, laserMaterial, laserOrderInLayer, Color.black, laserGhostColor, true);
+            _laser.InitiateLaser(maxLasers - laserNb, laserNb, 0, laserRange, laserWidth, laserMaterial, laserOrderInLayer, Color.black, laserGhostColor, true, null);
             _previousLaserNb = laserNb;
         }
 

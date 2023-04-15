@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class LaserCannon : MonoBehaviour
 {
@@ -11,6 +10,8 @@ public class LaserCannon : MonoBehaviour
     private float _laserRange;
     [SerializeField, Tooltip("Max distance the laser can travel."), Range(1, 10)]
     private int _maxNbOfLasers;
+    [SerializeField]
+    private VisualEffectAsset _laserParticles;
 
     [Header("LineRenderer settings")]
     [SerializeField, Range(0, 1)]
@@ -49,7 +50,8 @@ public class LaserCannon : MonoBehaviour
                 laserOrderInLayer: _laserOrderInLayer,
                 laserColor: _laserColor,
                 laserGhostColor: _laserGhostColor,
-                isGhost: true
+                isGhost: true,
+                particles: _laserParticles
                 );
         }
     }

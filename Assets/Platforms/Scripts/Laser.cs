@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Laser : MonoBehaviour, IGhostable
 {
@@ -12,6 +13,8 @@ public class Laser : MonoBehaviour, IGhostable
     private Color _laserColor;
     private Color _laserGhostColor;
     private ILaserable _lastLaserableObject;
+    private VisualEffectAsset _laserParticles;
+    private VisualEffect _laserParticlesComponent;
 
     private Laser _reflectedLaser; // The reflected laser
 
@@ -37,17 +40,25 @@ public class Laser : MonoBehaviour, IGhostable
                 laserOrderInLayer: _lineRenderer.sortingOrder,
                 laserColor: _laserColor,
                 laserGhostColor: _laserGhostColor,
-                isGhost: _isGhost
+                isGhost: _isGhost,
+                particles: _laserParticles
                 );
         }
     }
 
-    public void InitiateLaser(int maxNbOfLasers, int laserNb, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor, Color laserGhostColor, bool isGhost)
+    public void InitiateLaser(int maxNbOfLasers, int laserNb, float damagePerSecond, float laserRange, float laserWidth, Material laserMaterial, int laserOrderInLayer, Color laserColor, Color laserGhostColor, bool isGhost, VisualEffectAsset particles)
     {
         _damagePerSecond = damagePerSecond;
         _laserRange = laserRange;
         _laserNb = laserNb;
         _maxNbOfLasers = maxNbOfLasers;
+        _laserParticles = particles;
+        _laserParticlesComponent = gameObject.AddComponent<VisualEffect>();
+        if(_laserParticles != null)
+        {
+            _laserParticlesComponent.visualEffectAsset = _laserParticles;
+            _laserParticlesComponent.SetBool("LaserActive", false);
+        }
 
         _lineRenderer = gameObject.AddComponent<LineRenderer>();
         _lineRenderer.positionCount = 2;
@@ -95,11 +106,27 @@ public class Laser : MonoBehaviour, IGhostable
                 _reflectedLaser.gameObject.SetActive(true);
 
             _reflectedLaser.UpdateLaser(hit.point, Vector2.Reflect(dir, hit.normal), _isGhost);
+
+            // Particles
+            if (!_isGhost && _laserParticlesComponent.GetBool("LaserActive"))
+            {
+                _laserParticlesComponent.SetBool("LaserActive", false);
+            }
         }
         else
         {
             if (_reflectedLaser && _reflectedLaser.gameObject.activeSelf)
                     _reflectedLaser.DeactivateLaser();
+
+            // Particles
+            if (!_isGhost && !_laserParticlesComponent.GetBool("LaserActive"))
+            {
+                _laserParticlesComponent.SetBool("LaserActive", true);
+            }
+            else if(!_isGhost)
+            {
+                _laserParticlesComponent.SetVector3("StartPosition", hit.point);
+            }
         }
 
         // Activation stuff
@@ -113,6 +140,11 @@ public class Laser : MonoBehaviour, IGhostable
             else _lastLaserableObject ??= laserable;
 
             laserable.LaserReaction();
+        }
+        else if (!_isGhost && _lastLaserableObject != null)
+        {
+            _lastLaserableObject.LaserStop();
+            _lastLaserableObject = null;
         }
     }
 
@@ -131,6 +163,12 @@ public class Laser : MonoBehaviour, IGhostable
         {
             _lastLaserableObject.LaserStop();
             _lastLaserableObject = null;
+        }
+
+        // Particles
+        if (!_isGhost && _laserParticlesComponent.GetBool("LaserActive"))
+        {
+            _laserParticlesComponent.SetBool("LaserActive", false);
         }
     }
 
