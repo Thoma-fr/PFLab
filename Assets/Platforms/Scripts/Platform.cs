@@ -125,7 +125,7 @@ public class Platform : MonoBehaviour, IGhostable
     /// <summary> Checks the surrounding area to see if there is enough space to spawn at least a _minSize sized platform. </summary>
     private bool IsThereEnoughSpace()
     {
-        LayerMask mask = ~LayerMask.GetMask("Interface Interactable", "Ghost Mirror Platform");
+        LayerMask mask = ~LayerMask.GetMask("Interface Interactable", "Ghost Mirror Platform", "Platform Mouse Detection");
         if (Physics2D.OverlapCircle(transform.position, 0.3f, mask))
             return false;
 

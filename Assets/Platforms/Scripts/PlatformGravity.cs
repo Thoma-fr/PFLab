@@ -17,6 +17,8 @@ public class PlatformGravity : Platform
     private float _slurpDuration;
     [SerializeField, Tooltip("Slurp tweening")]
     private AnimationCurve _slurpCurve;
+    [SerializeField]
+    private BoxCollider2D _mouseDetectionCollider;
 
     private float _aboveDistance, _belowDistance;
     private BoxCollider2D _tubeCollider;
@@ -83,6 +85,10 @@ public class PlatformGravity : Platform
         belowPoint = (Vector2)transform.position + _belowDistance * up;
         Vector2 middle = Vector2.Lerp(belowPoint, abovePoint, .5f);
         _tubeCollider.offset = new Vector2(_coll.offset.x, transform.InverseTransformPoint(middle).y);
+
+        // Change mouse detection box collider
+        _mouseDetectionCollider.size = _tubeCollider.size;
+        _mouseDetectionCollider.offset = _tubeCollider.offset;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -147,6 +153,8 @@ public class PlatformGravity : Platform
     {
         if (_isGhost)
             return;
+        else if(!_mouseDetectionCollider.enabled)
+            _mouseDetectionCollider.enabled = true;
 
         MoveRigidBodies();
     }

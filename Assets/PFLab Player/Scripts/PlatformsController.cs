@@ -128,9 +128,11 @@ public class PlatformsController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Collider2D coll = Physics2D.OverlapCircle(_mousePosition, 0, LayerMask.GetMask("Platform", "Bouncing Platform"));
-        if (coll)
+        Collider2D coll = Physics2D.OverlapCircle(_mousePosition, 0, LayerMask.GetMask("Platform", "Bouncing Platform", "Platform Mouse Detection"));
+        if (coll && coll.gameObject.layer != LayerMask.NameToLayer("Platform Mouse Detection"))
             gameManager.hoveredPlatform = coll.gameObject;
+        else if (coll && coll.gameObject.layer == LayerMask.NameToLayer("Platform Mouse Detection"))
+            gameManager.hoveredPlatform = coll.transform.parent.gameObject;
         else
             gameManager.hoveredPlatform = null;
     }
