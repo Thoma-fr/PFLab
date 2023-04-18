@@ -9,7 +9,7 @@ public class MovementController : MonoBehaviour
     private URigidbody2D _urb;
     private InputController _inputs;
     private CapsuleCollider2D _collider;
-
+    public static MovementController instance;
     [Header("Movement")]
     [SerializeField]
     private float _maxSpeed;
@@ -56,6 +56,11 @@ public class MovementController : MonoBehaviour
         _Animator= GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _dustParticle = GetComponent<VisualEffect>();
+
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
     }
 
     private void Update()
