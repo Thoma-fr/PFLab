@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
+
 public class MovementController : MonoBehaviour
 {
     private URigidbody2D _urb;
@@ -19,6 +19,8 @@ public class MovementController : MonoBehaviour
     private float _accelerationStrength;
     [SerializeField, Tooltip("Multiplicateur d'acceleration lorsque le joueur est dans les airs.")]
     private float _airAccelerationFactor;
+    [SerializeField]
+    private float _maxAirSpeed;
     [SerializeField, Tooltip("Force de freinage.")]
     private float _deccelerationStrength;
     public Vector2 MovementDirection { get; set; }
@@ -151,13 +153,21 @@ public class MovementController : MonoBehaviour
     {
         if (GroundCheck(LayerMask.GetMask("Speed Platform")))
             return;
-        
+
         if (GroundCheck(~LayerMask.GetMask("Bouncing Platform"))) // On ground
             _urb.RigidBody2D.velocity += _accelerationStrength * Time.deltaTime * new Vector2(direction.x, 0);
-        else if(_urb.RigidBody2D.gravityScale != 0) // In air but not in gravity tube
+        else if(!_urb.InGravityTube) // In air but not in gravity tube
+        {
             _urb.RigidBody2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * new Vector2(direction.x, 0);
-        else // In air and in gravity tube
+            if(Mathf.Abs(_urb.RigidBody2D.velocity.x) > _maxAirSpeed)
+                _urb.RigidBody2D.velocity = new Vector2(_maxAirSpeed * direction.normalized.x, _urb.RigidBody2D.velocity.y);
+        }
+
+        if (_urb.InGravityTube)// In air and in gravityTube
+        {
             _urb.RigidBody2D.velocity += _accelerationStrength * _airAccelerationFactor * Time.deltaTime * direction;
+        }
+
     }
 
     private IEnumerator JumpCoroutine()

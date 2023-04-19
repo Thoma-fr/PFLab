@@ -221,9 +221,11 @@ public class Laser : MonoBehaviour, IGhostable
 
     private void OnDestroy()
     {
-        if(_lastLaserableObject != null)
-        {
-            _lastLaserableObject.LaserStop();
-        }
+        _lastLaserableObject?.LaserStop();
+    }
+
+    private void OnDisable()
+    {
+        _lastLaserableObject?.LaserStop();
     }
 }

@@ -11,6 +11,8 @@ public class URigidbody2D : MonoBehaviour
     public Vector2 LastFrameVelocity { get; private set; }
     public Rigidbody2D RigidBody2D => _rigidBody2D;
 
+    public bool InGravityTube;
+
     // Player stuff
     private InputController _inputs;
 

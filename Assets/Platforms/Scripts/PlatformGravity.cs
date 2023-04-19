@@ -102,6 +102,7 @@ public class PlatformGravity : Platform
                 return;
 
             urb.DisableControls(); // Au cas ou le urb est le joueur.
+            urb.InGravityTube = true;
             StartCoroutine(LerpIn(urb));
             _slurpInBodies.Add(urb);
         }
@@ -223,6 +224,7 @@ public class PlatformGravity : Platform
                 return;
 
             _gravityMoveBodies.Remove(urb);
+            urb.InGravityTube = false;
             urb.ResetGravityScale();
             urb.EnableControls();
         }
@@ -233,6 +235,7 @@ public class PlatformGravity : Platform
         foreach(var b in _gravityMoveBodies)
         {
             b.ResetGravityScale();
+            b.InGravityTube = false;
         }
         _gravityMoveBodies.Clear();
 
@@ -240,6 +243,7 @@ public class PlatformGravity : Platform
         {
             b.EnableControls();
             b.ResetGravityScale();
+            b.InGravityTube = false;
         }
         _slurpInBodies.Clear();
     }
