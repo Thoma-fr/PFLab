@@ -97,7 +97,7 @@ public class MovementController : MonoBehaviour,ILaserable
 
         if (HoldingJump)
         {
-            if (GroundCheck(~LayerMask.GetMask("Bouncing Platform")) && _jumpCoroutine == null)
+            if (GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Ghost Mirror Platform")) && _jumpCoroutine == null)
                 _jumpCoroutine = StartCoroutine(JumpCoroutine());
             else if (_jumpCoroutine != null)
                 IncreaseJumpDuration(Time.deltaTime * _jumpDurationMultiplier);

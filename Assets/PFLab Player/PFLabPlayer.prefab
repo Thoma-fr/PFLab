@@ -459,6 +459,7 @@ MonoBehaviour:
   - {fileID: 7616813212062528287, guid: 994bdf21587115e43871a5940262017f, type: 3}
   pfContainer: {fileID: 7809915031759186259}
   timeScaleValue: 0.01
+  platformShootSound: {fileID: 8300000, guid: 459acf432d506d241858c7a18fe7f49a, type: 3}
 --- !u!2083052967 &576043924444772232
 VisualEffect:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class PlatformGravity : Platform
     private BoxCollider2D _tubeCollider;
     private List<URigidbody2D> _gravityMoveBodies;
     private List<URigidbody2D> _slurpInBodies;
+    public AudioClip gravitySound;
 
     //=========================================================
 
@@ -42,6 +43,8 @@ public class PlatformGravity : Platform
             _tubeShapeController.spline.InsertPointAt(2, new Vector2(1, 1));
             _tubeShapeController.spline.InsertPointAt(3, new Vector2(1, 0));
         }
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -246,5 +249,13 @@ public class PlatformGravity : Platform
             b.InGravityTube = false;
         }
         _slurpInBodies.Clear();
+    }
+
+    public void PlayGravitySound()
+    {
+        _audioSource.pitch = 1f;
+        _audioSource.loop = true;
+        _audioSource.clip = gravitySound;
+        _audioSource.Play();
     }
 }

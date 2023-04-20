@@ -11,6 +11,7 @@ public class PlatformMirror : Platform
     private void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer("Ghost Mirror Platform");
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()

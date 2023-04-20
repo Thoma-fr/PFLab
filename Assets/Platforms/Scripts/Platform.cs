@@ -20,6 +20,7 @@ public class Platform : MonoBehaviour, IGhostable
     private float _animationDuration;
     [SerializeField, Tooltip("Tweening of the creation and destruction animations of the platform.")]
     private AnimationCurve _animationCurve;
+    public AudioClip creationAnimationSound;
 
     [Header("GFX")]
     [SerializeField, Tooltip("GFX Component of this platform.")]
@@ -45,11 +46,14 @@ public class Platform : MonoBehaviour, IGhostable
     public PLATFORM pfType { get; set; }
     public GameManager gameManager { get; set; }
     private Coroutine _creationAnimation;
+    protected AudioSource _audioSource;
 
     //=========================================================================================================
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>(); 
+
         if (!CompareTag("LaserPlatform"))
         {
             if (_platformSidesLimits[0].regions.Length != _stepsMinWidth.Length || _platformSidesLimits[1].regions.Length != _stepsMinWidth.Length)
@@ -154,6 +158,7 @@ public class Platform : MonoBehaviour, IGhostable
     /// <summary> The animation of the platform's creation. </summary>
     private IEnumerator CreateAnimation()
     {
+        PlayCreationSound();
         Vector3 iniScaleMiddle = _middle.localScale;
         Vector2[] iniPositionsMiddles = new Vector2[2] { _platformSidesLimits[0].regions[0].localPosition, _platformSidesLimits[1].regions[0].localPosition };
         Vector2[] iniPositionsExtreme = new Vector2[2] { _platformSidesLimits[0].regions[1].localPosition, _platformSidesLimits[1].regions[1].localPosition };
@@ -261,6 +266,10 @@ public class Platform : MonoBehaviour, IGhostable
 
         _coll.enabled = true;
         _creationAnimation = null;
+
+        if(this is PlatformGravity)
+            (this as PlatformGravity).PlayGravitySound();
+
         yield break;
     }
 
@@ -369,6 +378,12 @@ public class Platform : MonoBehaviour, IGhostable
             _coll.size = new(_width, _coll.size.y);
             _coll.offset = new(((_rightWidth + _colliderWidthOffset * (_platformSidesLimits[1].regions[_platformSidesLimits[1].regions.Length - 1].gameObject.activeSelf ? 1 : 0)) - (_leftWidth + _colliderWidthOffset * (_platformSidesLimits[0].regions[_platformSidesLimits[0].regions.Length - 1].gameObject.activeSelf ? 1 : 0))) * .5f, 0);
         }
+    }
+
+    public void PlayCreationSound()
+    {
+        _audioSource.pitch = UnityEngine.Random.Range(.90f, 1.1f);
+        _audioSource.PlayOneShot(creationAnimationSound);
     }
 
 #if UNITY_EDITOR

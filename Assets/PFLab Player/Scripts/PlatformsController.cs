@@ -27,14 +27,18 @@ public class PlatformsController : MonoBehaviour
 
     [Header("Other")]
     public float timeScaleValue;
+    public AudioClip platformShootSound;
+    public AudioClip destroySound;
 
     private Vector2 _mousePosition;
+    private AudioSource _audioSource;
 
     //==========================================================================
 
     private void Start()
     {
         choosenPlatform = PLATFORM.NONE;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -94,11 +98,13 @@ public class PlatformsController : MonoBehaviour
         gameManager.AddPlatformToTracker(_newPlatform, (int)choosenPlatform);
         DOTween.KillAll();
         DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
+        PlayPlatformShootSound();
     }
 
     public void DeletePlatform()
     {
-        gameManager.DeleteHoveredPlatform();
+        if(gameManager.DeleteHoveredPlatform())
+            PlayDestroySound();
     }
 
     public void FollowMouse()
@@ -126,6 +132,18 @@ public class PlatformsController : MonoBehaviour
             DOTween.KillAll();
             DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.2f);
         }
+    }
+
+    private void PlayPlatformShootSound()
+    {
+        _audioSource.pitch = UnityEngine.Random.Range(.75f, 1.25f);
+        _audioSource.PlayOneShot(platformShootSound);
+    }
+
+    private void PlayDestroySound()
+    {
+        _audioSource.pitch = UnityEngine.Random.Range(.75f, 1.25f);
+        _audioSource.PlayOneShot(destroySound, .5f);
     }
 
     private void FixedUpdate()
