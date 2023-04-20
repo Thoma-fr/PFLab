@@ -6248,7 +6248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8196629739353763445, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
       propertyPath: laserPulsePower
-      value: 3
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8196629739353763445, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
       propertyPath: _maxJumpDuration
