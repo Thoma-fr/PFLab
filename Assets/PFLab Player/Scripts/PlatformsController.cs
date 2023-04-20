@@ -83,6 +83,8 @@ public class PlatformsController : MonoBehaviour
         if (!platformScript.CanBePlaced)
         {
             Destroy(_newPlatform);
+            DOTween.KillAll();
+            DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 0.1f);
             return;
         }
 
