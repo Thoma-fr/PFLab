@@ -95,10 +95,37 @@ MonoBehaviour:
   drawWidthVerticalOffset: 0.2
   _minWidth: 0.9
   _maxWidth: 3
-  _animationDuration: 0
+  _animationDuration: 0.2
   _animationCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.0053786696
+      outSlope: -0.0053786696
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.64583325
+      value: 1.0094132
+      inSlope: 3.871966
+      outSlope: 3.871966
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07348241
+      outWeight: 0.09411787
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.23010597
+      outSlope: 0.23010597
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.35416675
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -107,6 +134,7 @@ MonoBehaviour:
   - 1.6
   - 1.9
   _colliderWidthOffset: 0.3
+  _middle: {fileID: 1797000103099730275}
   _platformSidesLimits:
   - name: Left
     regions:
@@ -123,8 +151,6 @@ MonoBehaviour:
   - name: Right
     regions:
     - {fileID: 8912468165910448762}
-  _leftWidth: 1.5
-  _rightWidth: 1.5
 --- !u!1 &385883924328604843
 GameObject:
   m_ObjectHideFlags: 0

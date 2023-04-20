@@ -1,8 +1,8 @@
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using static Unity.Burst.Intrinsics.X86;
 
 public class Platform : MonoBehaviour, IGhostable
 {
@@ -29,6 +29,8 @@ public class Platform : MonoBehaviour, IGhostable
     [SerializeField, Range(0, 1)]
     private float _colliderWidthOffset;
     [SerializeField]
+    private Transform _middle;
+    [SerializeField]
     private PlatformSide[] _platformSidesLimits = new PlatformSide[2];
     [SerializeField]
     private PlatformSide[] _platformSidesExtenders = new PlatformSide[2];
@@ -42,6 +44,7 @@ public class Platform : MonoBehaviour, IGhostable
     public bool CanBePlaced => _canBePlaced;
     public PLATFORM pfType { get; set; }
     public GameManager gameManager { get; set; }
+    private Coroutine _creationAnimation;
 
     //=========================================================================================================
 
@@ -65,6 +68,9 @@ public class Platform : MonoBehaviour, IGhostable
     protected void Update()
     {
         if (!_isGhost)
+            return;
+
+        if (_creationAnimation != null)
             return;
 
         _width = _leftWidth + _rightWidth;
@@ -141,26 +147,120 @@ public class Platform : MonoBehaviour, IGhostable
     /// <summary> Starts the animation of the platform's creation. </summary>
     public void CreatePlatform()
     {
-        // TODO
+        if (!CompareTag("LaserPlatform"))
+            _creationAnimation = StartCoroutine(CreateAnimation());
     }
 
     /// <summary> The animation of the platform's creation. </summary>
     private IEnumerator CreateAnimation()
     {
-        // TODO
-        yield break;
-    }
+        Vector3 iniScaleMiddle = _middle.localScale;
+        Vector2[] iniPositionsMiddles = new Vector2[2] { _platformSidesLimits[0].regions[0].localPosition, _platformSidesLimits[1].regions[0].localPosition };
+        Vector2[] iniPositionsExtreme = new Vector2[2] { _platformSidesLimits[0].regions[1].localPosition, _platformSidesLimits[1].regions[1].localPosition };
 
-    /// <summary> Starts the animation of the platform's destruction. </summary>
-    public void DestroyPlatform()
-    {
-        // TODO
-    }
+        // les milieux
+        _middle.gameObject.SetActive(false);
+        bool limit00 = _platformSidesLimits[0].regions[0].gameObject.activeSelf;
+        _platformSidesLimits[0].regions[0].gameObject.SetActive(false);
+        bool limit10 = _platformSidesLimits[1].regions[0].gameObject.activeSelf;
+        _platformSidesLimits[1].regions[0].gameObject.SetActive(false);
 
-    /// <summary> The animation of the platform's destruction. </summary>
-    private IEnumerator DestroyAnimation()
-    {
-        // TODO
+        // les extenders
+        _platformSidesExtenders[0].regions[0].gameObject.SetActive(false);
+        _platformSidesExtenders[1].regions[0].gameObject.SetActive(false);
+
+        // les extremes
+        bool limit01 = _platformSidesLimits[0].regions[1].gameObject.activeSelf;
+        _platformSidesLimits[0].regions[1].gameObject.SetActive(false);
+        bool limit11 = _platformSidesLimits[1].regions[1].gameObject.activeSelf;
+        _platformSidesLimits[1].regions[1].gameObject.SetActive(false);
+
+        SpriteShapeController ssc0 = _platformSidesExtenders[0].regions[0].GetComponent<SpriteShapeController>();
+        SpriteShapeController ssc1 = _platformSidesExtenders[1].regions[0].GetComponent<SpriteShapeController>();
+
+
+        int i = -1;
+        float t = 1;
+        while (i < 3)
+        {
+            if (_coll.enabled)
+                _coll.enabled = false;
+
+            switch (i)
+            {
+                case 0:
+                    _middle.localScale = Vector3.LerpUnclamped(Vector3.zero, iniScaleMiddle, _animationCurve.Evaluate(t));
+                    t += Time.deltaTime / _animationDuration;
+                    yield return new WaitForSeconds(Time.deltaTime);
+                break;
+
+                case 1:
+                    if(limit00)
+                        _platformSidesLimits[0].regions[0].localPosition = Vector2.LerpUnclamped(Vector2.zero, iniPositionsMiddles[0], _animationCurve.Evaluate(t));
+                    
+                    if (limit10)
+                        _platformSidesLimits[1].regions[0].localPosition = Vector2.LerpUnclamped(Vector2.zero, iniPositionsMiddles[1], _animationCurve.Evaluate(t));
+                    
+                    t += Time.deltaTime / _animationDuration;
+                    yield return new WaitForSeconds(Time.deltaTime);
+                    break;
+
+                case 2:
+                    if (limit01)
+                    {
+                        _platformSidesLimits[0].regions[1].localPosition = Vector2.LerpUnclamped(_platformSidesLimits[0].regions[0].localPosition, iniPositionsExtreme[0], _animationCurve.Evaluate(t));
+                        ssc0.spline.Clear();
+                        ssc0.spline.InsertPointAt(0, new Vector2(_platformSidesLimits[0].regions[1].localPosition.x - ssc0.transform.localPosition.x, 0));
+                        ssc0.spline.InsertPointAt(1, Vector2.zero);
+                    }
+
+                    if (limit11)
+                    {
+                        _platformSidesLimits[1].regions[1].localPosition = Vector2.LerpUnclamped(_platformSidesLimits[1].regions[0].localPosition, iniPositionsExtreme[1], _animationCurve.Evaluate(t));
+                        ssc1.spline.Clear();
+                        ssc1.spline.InsertPointAt(0, Vector2.zero);
+                        ssc1.spline.InsertPointAt(1, new Vector2(_platformSidesLimits[1].regions[1].localPosition.x - ssc1.transform.localPosition.x, 0));
+                    }
+
+                    t += Time.deltaTime / _animationDuration;
+                    yield return new WaitForSeconds(Time.deltaTime);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if(t >= 1)
+            {
+                t = 0;
+                i++;
+
+                switch (i)
+                {
+                    case 0:
+                        _middle.gameObject.SetActive(true);
+                        break;
+
+                    case 1:
+                        _platformSidesLimits[0].regions[0].gameObject.SetActive(limit00);
+                        _platformSidesLimits[1].regions[0].gameObject.SetActive(limit10);
+                        break;
+
+                    case 2:
+                        _platformSidesExtenders[0].regions[0].gameObject.SetActive(limit01);
+                        _platformSidesExtenders[1].regions[0].gameObject.SetActive(limit11);
+                        _platformSidesLimits[0].regions[1].gameObject.SetActive(limit01);
+                        _platformSidesLimits[1].regions[1].gameObject.SetActive(limit11);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        _coll.enabled = true;
+        _creationAnimation = null;
         yield break;
     }
 
