@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class MovementController : MonoBehaviour,ILaserable
+public class MovementController : MonoBehaviour, ILaserable
 {
     private URigidbody2D _urb;
     private InputController _inputs;
@@ -281,19 +281,20 @@ public class MovementController : MonoBehaviour,ILaserable
         Gizmos.DrawWireSphere((Vector2)transform.position + _headCheckDistance * Vector2.up, _collider.size.x * .5f);
         Handles.Label((Vector2)transform.position + _headCheckDistance * Vector2.up, "Head", labels);
     }
+#endif
 
     public void LaserReaction()
     {
-        if(_urb.RigidBody2D.velocity==Vector2.zero)
+        if (_urb.RigidBody2D.velocity == Vector2.zero)
         {
-            _urb.RigidBody2D.AddForce(-Vector2.right*laserPulsePower, ForceMode2D.Force);
+            _urb.RigidBody2D.AddForce(-Vector2.right * laserPulsePower, ForceMode2D.Force);
         }
         else
-        _urb.RigidBody2D.AddForce(-_urb.RigidBody2D.velocity*laserPulsePower, ForceMode2D.Force);
+            _urb.RigidBody2D.AddForce(-_urb.RigidBody2D.velocity * laserPulsePower, ForceMode2D.Force);
     }
 
     public void LaserStop()
     {
+        return;
     }
-#endif
 }
