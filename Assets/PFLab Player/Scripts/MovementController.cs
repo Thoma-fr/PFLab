@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class MovementController : MonoBehaviour
+public class MovementController : MonoBehaviour,ILaserable
 {
     private URigidbody2D _urb;
     private InputController _inputs;
@@ -48,6 +48,9 @@ public class MovementController : MonoBehaviour
     private Animator _Animator;
     private SpriteRenderer _spriteRenderer;
     private VisualEffect _dustParticle;
+    private bool faceRight;
+    [SerializeField] private float laserPulsePower;
+
     //==========================================================================
 
     private void Awake()
@@ -85,7 +88,7 @@ public class MovementController : MonoBehaviour
         }
 
         // Si le joueur touche le sol excepte les plateformes de bounce et de speed, on clamp sa vitesse.
-        if(GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Speed Platform")))
+        if(GroundCheck(~LayerMask.GetMask("Bouncing Platform", "Ghost Mirror Platform")))
             ClampSpeed(_maxSpeed);
 
         if (HoldingJump)
@@ -217,10 +220,24 @@ public class MovementController : MonoBehaviour
     }
     private void flipX()
     {
-        if (_urb.RigidBody2D.velocity.x > 0.3)
+        if (_urb.RigidBody2D.velocity.x > 0)
+        {
             _spriteRenderer.flipX = false;
-        else
+            faceRight=true;
+        }
+        else if( _urb.RigidBody2D.velocity.x < 0)
+        {
+         
             _spriteRenderer.flipX = true;
+            faceRight = false;
+        }
+        else
+        {
+            if(faceRight)
+                _spriteRenderer.flipX = false;
+            else
+                _spriteRenderer.flipX = true;
+        }
     }
 #if UNITY_EDITOR
     // =====================================================================
@@ -247,6 +264,20 @@ public class MovementController : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere((Vector2)transform.position + _headCheckDistance * Vector2.up, _collider.size.x * .5f);
         Handles.Label((Vector2)transform.position + _headCheckDistance * Vector2.up, "Head", labels);
+    }
+
+    public void LaserReaction()
+    {
+        if(_urb.RigidBody2D.velocity==Vector2.zero)
+        {
+            _urb.RigidBody2D.AddForce(-Vector2.right*laserPulsePower, ForceMode2D.Force);
+        }
+        else
+        _urb.RigidBody2D.AddForce(-_urb.RigidBody2D.velocity*laserPulsePower, ForceMode2D.Force);
+    }
+
+    public void LaserStop()
+    {
     }
 #endif
 }
