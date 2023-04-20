@@ -6238,6 +6238,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.16399997
       objectReference: {fileID: 0}
+    - target: {fileID: 8196629739353763445, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
+      propertyPath: stepSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5456ce7c4830f6243b80ae8fce4fe7bd, type: 3}
     - target: {fileID: 8196629739353763446, guid: aab91c9fa2b566d43bc69f246476a801, type: 3}
       propertyPath: gameManager
       value: 
