@@ -24,6 +24,7 @@ public class MovementController : MonoBehaviour,ILaserable
     [SerializeField, Tooltip("Force de freinage.")]
     private float _deccelerationStrength;
     public Vector2 MovementDirection { get; set; }
+    public AudioClip stepSound;
 
     [Header("Jump")]
     [SerializeField, Range(0, 2f)]
@@ -44,11 +45,13 @@ public class MovementController : MonoBehaviour,ILaserable
     private float _currentJumpDuration;
     private Coroutine _jumpCoroutine;
     public bool HoldingJump { get; set; }
+    public AudioClip jumpSound;
 
     private Animator _Animator;
     private SpriteRenderer _spriteRenderer;
     private VisualEffect _dustParticle;
     private bool faceRight;
+    private AudioSource _audioSource;
     [SerializeField] private float laserPulsePower;
 
     //==========================================================================
@@ -61,6 +64,7 @@ public class MovementController : MonoBehaviour,ILaserable
         _Animator= GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _dustParticle = GetComponent<VisualEffect>();
+        _audioSource = GetComponent<AudioSource>();
 
         if (instance == null)
             instance = this;
@@ -238,6 +242,18 @@ public class MovementController : MonoBehaviour,ILaserable
             else
                 _spriteRenderer.flipX = true;
         }
+    }
+
+    public void PlayStepSound()
+    {
+        _audioSource.pitch = UnityEngine.Random.Range(.75f, 1.25f);
+        _audioSource.PlayOneShot(stepSound);
+    }
+
+    public void PlayJumpSound()
+    {
+        _audioSource.pitch = UnityEngine.Random.Range(.75f, 1.25f);
+        _audioSource.PlayOneShot(jumpSound);
     }
 #if UNITY_EDITOR
     // =====================================================================
